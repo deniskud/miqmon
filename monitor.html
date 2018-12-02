@@ -42,9 +42,9 @@
     ///////// sinus TMP //////////  
     for (var x=0; x<1000; x++){
       i1[x]=127*Math.sin(Math.PI*x/90);
-      q1[x]=127*Math.cos(Math.PI*x/90);
-      i2[x]=127*Math.sin(Math.PI*x/90-Math.PI/8);
-      q2[x]=127*Math.cos(Math.PI*x/90-Math.PI/8);      
+      q1[x]=27*Math.sin(Math.PI*x/90-Math.PI/8);
+      i2[x]=1000*Math.sin(Math.PI*x/90-Math.PI/16);
+      q2[x]=0*Math.cos(Math.PI*x/90-Math.PI/16);      
       e1[x]=Math.sqrt(i1[x]*i1[x]+q1[x]*q1[x]);
       e2[x]=Math.sqrt(i2[x]*i2[x]+q2[x]*q2[x]);
     }
@@ -70,12 +70,14 @@
       context.strokeStyle = color;
       context.stroke();
     }
+    
     function outgrid(canv){
       var canvas = document.getElementById(canv);
       var context = canvas.getContext("2d");
       //zeroline
       var zoomz = document.getElementById("zerolevel1");
       var zoomy = document.getElementById("zoomybox1");
+      var sr = document.getElementById("sr1");
       var tgs11 = document.getElementById("tgs11");
       var tgs21 = document.getElementById("tgs21");
       var tgs31 = document.getElementById("tgs31");
@@ -90,26 +92,96 @@
       var tgs52 = document.getElementById("tgs52");
       var tgs62 = document.getElementById("tgs62");
       var tgs72 = document.getElementById("tgs72");
-      var scalems1 = tgs11.value;
-      var scalems2 = tgs21.value;
-      var scalems3 = tgs31.value;
-      var scalems4 = tgs41.value;
-      var scalems5 = tgs51.value;
-      var scalems6 = tgs61.value;
-      var scalems7 = tgs71.value;         
+      var scalems1 = tgs11;
+      var scalems2 = tgs21;
+      var scalems3 = tgs31;
+      var scalems4 = tgs41;
+      var scalems5 = tgs51;
+      var scalems6 = tgs61;
+      var scalems7 = tgs71;         
       if (canv=="cano2") {
         zoomz = document.getElementById("zerolevel2");
         zoomy = document.getElementById("zoomybox2");
-        scalems1 = tgs12.value;
-        scalems2 = tgs22.value;
-        scalems3 = tgs32.value;
-        scalems4 = tgs42.value;
-        scalems5 = tgs52.value;
-        scalems6 = tgs62.value;
-        scalems7 = tgs72.value;         
-      }
+        sr = document.getElementById("sr2");
+        scalems1 = tgs12;
+        scalems2 = tgs22;
+        scalems3 = tgs32;
+        scalems4 = tgs42;
+        scalems5 = tgs52;
+        scalems6 = tgs62;
+        scalems7 = tgs72;         
+        
+      }      
       var y0=zoomz.value;
       var zoomvalue=zoomy.value;
+      var zoomx=1;
+      var zoomx=1/zoomx;
+///////////////////////////////      
+      if (scalems7.checked){
+        context.beginPath();    
+        for (var x=0; x<canvas.width;x+=(zoomx*sr.value/1000)){
+          context.moveTo(x, canvas.height - y0-5);
+          context.lineTo(x, canvas.height - y0+5);
+        }
+        context.strokeStyle = "#999999";
+        context.stroke();                
+      }
+      if (scalems6.checked){
+        context.beginPath();    
+        for (var x=0; x<canvas.width;x+=(zoomx*sr.value/100)){
+          context.moveTo(x, canvas.height - y0-7);
+          context.lineTo(x, canvas.height - y0+7);
+        }
+        context.strokeStyle = "#bbbbbb";
+        context.stroke();                
+      }
+      if (scalems5.checked){
+        context.beginPath();    
+        for (var x=0; x<canvas.width;x+=(zoomx*sr.value/10)){
+          context.moveTo(x, canvas.height - y0-13);
+          context.lineTo(x, canvas.height - y0+13);
+        }
+        context.strokeStyle = "#dddddd";
+        context.stroke();                
+      }
+      if (scalems4.checked){
+        context.beginPath();    
+        for (var x=0; x<canvas.width;x+=(zoomx*sr.value)){
+          context.moveTo(x, canvas.height - y0-20);
+          context.lineTo(x, canvas.height - y0+20);
+        }
+        context.strokeStyle = "#eeeeee";
+        context.stroke();                
+      }
+      if (scalems3.checked){
+        context.beginPath();    
+        for (var x=0; x<canvas.width;x+=(zoomx*sr.value*10)){
+          context.moveTo(x, canvas.height - y0-25);
+          context.lineTo(x, canvas.height - y0+25);
+        }
+        context.strokeStyle = "#ffffff";
+        context.stroke();                
+      }
+      if (scalems2.checked){
+        context.beginPath();    
+        for (var x=0; x<canvas.width;x+=(zoomx*sr.value*100)){
+          context.moveTo(x, canvas.height - y0-30);
+          context.lineTo(x, canvas.height - y0+30);
+        }
+        context.strokeStyle = "#ffffff";
+        context.stroke();                
+      }
+      if (scalems1.checked){
+        context.beginPath();    
+        for (var x=0; x<canvas.width;x+=(zoomx*sr.value*1000)){
+          context.moveTo(x, canvas.height - y0-40);
+          context.lineTo(x, canvas.height - y0+40);
+        }
+        context.strokeStyle = "#ffffff";
+        context.stroke();                
+      }
+
+
       context.beginPath();
         context.moveTo(0, canvas.height - y0);
         context.lineTo(canvas.width, canvas.height - y0);
@@ -123,8 +195,8 @@
       }
       for (var y=(canvas.height - y0 +10); y<canvas.height; y+=10) {
         context.moveTo(0, y);
-        context.lineTo(canvas.width,y);      
-      }      
+        context.lineTo(canvas.width,y);
+      }
       context.strokeStyle = "#555555";
       context.stroke();        
       context.beginPath();      
