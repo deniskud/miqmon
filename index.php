@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="author" content="denis.kudriakov@gmail.com">
   <style>
-    body
+   select { width: 200px;}      
     .zzpoint {position: fixed ; left: 12px; top: 12px; z-index: 1;}
     .hid {position: fixed; left: 0px; top: -73px; width: 100%; height: 80px; 
     background: #777777; color: #111111; margin-top: 5px; 
@@ -22,32 +22,198 @@
     .l2hid:hover {left: 0px; z-index: 10;}
   </style>
   <script>
-  //////////////////
-    var filename1='';
-    var filename2='';
-    var bit1=8;
-    var bit2=8;
-    var be1=1;
-    var be2=1;
-    var startframe1=0;
-    var startframe2=0;
-    var zooma=1;
-    var zoomb=1;
+  ////////////////// PHP
+<?php
+/*
+if (!$zoomtype) $zoomtype=0;
+if (!$type) $type='nbr';
+*/
+
+$filename1=@$_GET['filename1'];
+$filename2=@$_GET['filename2'];
+$bitrate1=@$_GET['bitrate1'];
+$bitrate2=@$_GET['bitrate2'];
+$startframe1=@$_GET['startframe1'];
+$startframe2=@$_GET['startframe2'];
+$zoom1=@$_GET['zoom1'];
+$zoom2=@$_GET['zoom2'];
+$byteorder1=@$_GET['bl1'];
+$byteorder2=@$_GET['bl2'];
+
+if (!$filename1) $filename1='demosinus'; //default file 2 out
+if (!$filename2) $filename2='demosinus'; //
+if (!$bitrate1) $bitrate1=16;
+if (!$bitrate2) $bitrate2=16;
+if (!$startframe1) $startframe1=0;
+if (!$startframe2) $startframe2=0;
+if (!$zoom1) $zoom1=1;
+if (!$zoom2) $zoom2=1;
+if (!$byteorder1) $byteorder1='off';
+if (!$byteorder2) $byteorder2='off';
+
+$itmp=0;
+$qtmp=0;
+$etmp=0;
+
+//variables 2 JS
+echo "
+    var filename1='$filename1';
+    var filename2='$filename2';
+    var bit1=$bitrate1;
+    var bit2=$bitrate2;
+    var be1='$byteorder1';
+    var be2='$byteorder2';
+    var startframe1=$startframe1;
+    var startframe2=$startframe2;
+    var zooma=$zoom1;
+    var zoomb=$zoom2;
     var i1=new Array(1000);
     var i2=new Array(1000);
     var q1=new Array(1000);
     var q2=new Array(1000);
     var e1=new Array(1000);
     var e2=new Array(1000);
+";
+
+// read file 1
+$f = fopen("iq/".$filename1, "r");
+// shift @startframe
+while ($startframe1-- >0){
+  $tmp=fgetc($f);
+  $tmp=fgetc($f);
+  if ($bitrate1==12) $tmp=fgetc($f);
+  if ($bitrate1==16) {
+    $tmp=fgetc($f);
+    $tmp=fgetc($f);
+  }
+}
+$i=0;
+while (($i++ < 1000 ) AND !feof($f)){ //read 1000 frames file A
+  $y=ord(fgetc($f)); // I
+  if ($byteorder1=='off') $y=$y + 256 * ord(fgetc($f));
+  else $y * 256 + ord(fgetc($f));
+  if ($y>32767) $y=$y-65536; // 2unsigned    
+  echo "i1[$i]=".$y.";"; 
+  $y=ord(fgetc($f)); // Q
+  if ($byteorder1=='off') $y=$y + 256 * ord(fgetc($f));
+  else $y * 256 + ord(fgetc($f));
+  if ($y>32767) $y=$y-65536; // 2unsigned    
+  echo "q1[$i]=".$y.";"; 
+}
+fclose($f);
+$f2 = fopen("iq/".$filename2, "r");
+while ($startframe2-- >0){ //farmes i+q
+  $tmp=fgetc($f2);
+  $tmp=fgetc($f2);
+  if ($bitrate2==12) $tmp=fgetc($f2);
+  if ($bitrate2==16) {
+    $tmp=fgetc($f2);
+    $tmp=fgetc($f2);
+  }
+}
+$i=0;
+echo "\n";
+while (($i++ < 1000 ) AND !feof($f2)){ //read 1000 frames file B
+  $y=ord(fgetc($f2)); // I
+  if ($byteorder2=='off') $y=$y + 256 * ord(fgetc($f2));
+  else $y * 256 + ord(fgetc($f2));
+  if ($y>32767) $y=$y-65536; // 2unsigned    
+  echo "i2[$i]=".$y.";"; 
+  $y=ord(fgetc($f2)); // Q
+  if ($byteorder2=='off') $y=$y + 256 * ord(fgetc($f2));
+  else $y * 256 + ord(fgetc($f2));
+  if ($y>32767) $y=$y-65536; // 2unsigned    
+  echo "q2[$i]=".$y.";"; 
+}
+fclose($f);
+
+
+/*
+  $y[1][$i]=ord(fgetc($f)); // I
+  if ($byteorder=='off') $y[1][$i]=  $y[1][$i] + 256 * ord(fgetc($f));
+  else $y[1][$i]=$y[1][$i] * 256 + ord(fgetc($f));
+  if ($y[1][$i]>32767) $y[1][$i]=$y[1][$i]-65536; // 2unsigned    
+  $y[2][$i]=ord(fgetc($f)); // Q
+  if ($byteorder=='off') $y[2][$i]=  $y[2][$i] + 256 * ord(fgetc($f));
+  else $y[2][$i]=$y[2][$i] * 256 + ord(fgetc($f));
+  if ($y[2][$i]>32767) $y[2][$i]=$y[2][$i]-65536; // 2unsigned    
+
+*/
+
+/*
+
+
+
+
+
+
+
+
+  $y[1][$i]=ord(fgetc($f));
+  if ($bitrate==)8{
+    if ($y[1][$i]>127) $y[1][$i]=$y[1][$i]-256; // 2unsigned    
+  }
+
+  if ($bitrate==)12{
+    $tmpi=ord(fgetc($f));
+    
+    if ($y[1][$i]>2047) $y[1][$i]=$y[1][$i]-4096; // 2unsigned        
+  }
+
+  if ($bitrate==16) { 
+    if ($byteorder==0) $y[1][$i]= round(( $y[1][$i] + 256 * ord(fgetc($f)))/256);
+    else $y[1][$i]=round(( $y[1][$i] * 256 + ord(fgetc($f)))/256);
+    if ($y[1][$i]>32767) $y[1][$i]=$y[1][$i]-65536; // 2unsigned    
+  }  
+ */
+
+/*
+  $sred=0;
+  for ($xtmp=0; $xtmp<$zoom; $xtmp++){ //zoom
+    //считали первую часть
+    $y[1][$i]=ord(fgetc($f));
+    if ($bitrate==16) { //если 16бит приводим к 8-ми
+    //big end
+      if ($byteorder==0) {
+          $y[1][$i]= round(( $y[1][$i] + 256 * ord(fgetc($f)))/256);
+      }
+   // little end
+      else $y[1][$i]=round(( $y[1][$i] * 256 + ord(fgetc($f)))/256);
+    }
+   if ($y[1][$i]>127) $y[1][$i]=$y[1][$i]-256; //привели к знаковуму [-127..+127]
+    //считали вторую
+    $y[2][$i]=ord(fgetc($f));
+    if ($bitrate==16) { //если 16бит приводим к 8-ми
+    //big endmonitor.php
+      if ($byteorder==0) {
+        $y[2][$i]=round(( $y[2][$i] + 256 * ord(fgetc($f)))/256);
+      }
+    //little end
+      else $y[2][$i]=round(( $y[2][$i] * 256 + ord(fgetc($f)))/256);
+    }
+  if ($y[2][$i]>127) $y[2][$i]=$y[2][$i]-256;
+    $y[3][$i]=round(sqrt(($y[1][$i]*$y[1][$i]) + ($y[2][$i]*$y[2][$i]) )  );
+    $sred=$sred+$y[3][$i];
+  }
+  if ($zoomtype !== 0) $y[3][$i]=round($sred/$zoom);
+*/
+
+
+
+?>  
+  
+  
   
     ///////// sinus TMP //////////  
-    for (var x=0; x<1000; x++){
-      i1[x]=127*Math.sin(Math.PI*x/90);
-      q1[x]=27*Math.sin(Math.PI*x/90-Math.PI/8);
-      i2[x]=1000*Math.sin(Math.PI*x/90-Math.PI/16);
-      q2[x]=0*Math.cos(Math.PI*x/90-Math.PI/16);      
-      e1[x]=Math.sqrt(i1[x]*i1[x]+q1[x]*q1[x]);
-      e2[x]=Math.sqrt(i2[x]*i2[x]+q2[x]*q2[x]);
+    if (filename1=='demosinus' && filename2=='demosinus') {
+      for (var x=0; x<1000; x++){
+        i1[x]=127*Math.sin(Math.PI*x/90);
+        q1[x]=27*Math.sin(Math.PI*x/90-Math.PI/8);
+        i2[x]=1000*Math.sin(Math.PI*x/90-Math.PI/16);
+        q2[x]=0*Math.cos(Math.PI*x/90-Math.PI/16);      
+        e1[x]=Math.sqrt(i1[x]*i1[x]+q1[x]*q1[x]);
+        e2[x]=Math.sqrt(i2[x]*i2[x]+q2[x]*q2[x]);
+      }
     }
     ///////////////////
                  
@@ -442,61 +608,67 @@
  </head>
 <body>
 <div class="hid"> <!-- TOP panel-->
- <form onchange='' id="xform">
+ <form method="get" action="./index.php" onchange='' id="xform">
  <table border=0 width=100%>
   <tr>
-   <td>&nbsp; &nbsp;File A :
-    <select name=filename>
-     <option id='2msec.iq' >2msec.iq
-     <option id='400kT2.iq' >400kT2.iq
-     <option id='4msec-2.iq' >4msec-2.iq
-     <option id='4msec.iq' >4msec.iq
-     <option id='4msec0-127.iq' >4msec0-127.iq
-     <option id='4msec0-180.iq' >4msec0-180.iq
-    </select>
+   <td >&nbsp; &nbsp;File A :
+ <select name=filename1 >
+ <?php 
+   $files = scandir("./iq");
+   foreach($files as $f) {
+     if ($filename1==$f) $chk = " SELECTED"; else $chk="";
+     if (strpos($f,".iq") || strpos($f,".bin")) echo "<option id='".$f."' ".$chk.">".$f;
+   }
+?>
+</select>
+
+
    </td>
    <td>
-    <input type=radio name=bitrate1 value=8 checked>8
+    <input type=radio name=bitrate1 value=8>8
     <input type=radio name=bitrate1 value=12>12
-    <input type=radio name=bitrate1 value=16>16
+    <input type=radio name=bitrate1 value=16 checked>16
    </td>
-   <td>Big/Litle<input type=checkbox></td>
+   <td>Big/Litle<input type=checkbox name=bl1 id='bl1'></td>
    <td>Start frame: <input type=text name=startframe1 size=5 value="0"></td>
    <td>Zoom A
     <input id='zoomslider1' type="range" min="1" max="1000" step="1" value="1" onchange='synhro("zoomslider1","zoombox1");' name="zoomslider1" style='topmargin:15;'>
     <input type=text name=zoom1 id='zoombox1' value="1" style='width:50px;' onchange="synhro('zoombox1','zoomslider1');">  
    </td> 
-  </tr> 
+   <td><input type="submit" value="update"></td> 
+  </tr> <!--  second:-->
   <tr>
    <td>&nbsp; &nbsp;File B :
-    <select name=filename>
-     <option id='2msec.iq' >2msec.iq
-     <option id='400kT2.iq' >400kT2.iq
-     <option id='4msec-2.iq' >4msec-2.iq
-     <option id='4msec.iq' >4msec.iq
-     <option id='4msec0-127.iq' >4msec0-127.iq
-     <option id='4msec0-180.iq' >4msec0-180.iq
-    </select>
+ <select name=filename2 >
+ <?php 
+   $files = scandir("./iq");
+   foreach($files as $f) {
+     if ($filename2==$f) $chk = " SELECTED"; else $chk="";
+     if (strpos($f,".iq") || strpos($f,".bin")) echo "<option id='".$f."' ".$chk.">".$f;
+   }
+?>
+</select>
    </td>
    <td>
-    <input type=radio name=bitrate2 value=8 checked>8
+    <input type=radio name=bitrate2 value=8>8
     <input type=radio name=bitrate2 value=12>12
-    <input type=radio name=bitrate2 value=16>16
+    <input type=radio name=bitrate2 value=16 checked>16
    </td>
-   <td>Big/Litle<input type=checkbox></td>
+   <td>Big/Litle<input type=checkbox name=bl2 id='bl2'></td>
    <td>Start frame: <input type=text name=startframe2 size=5 value="0"></td>
    <td>Zoom B
     <input id='zoomslider2' type="range" min="1" max="1000" step="1" value="1" onchange="synhro('zoomslider2','zoombox2');" name="zoomslider2" style='topmargin:15;'>
     <input type=text name=zoom2 id='zoombox2' value="1" style='width:50px;' onchange="synhro('zoombox2','zoomslider2');">  
    </td> 
+   <td><input type="submit" value="update"></td> 
   </tr>
  </table>
  </form>
 </div>
 <div class="lhid"><!-- Left panel1-->
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chi1" >-I1&nbsp;&nbsp;<input type=checkbox onchange='reoutcanvas("cano1")' id="chiris1">mark point&nbsp;&nbsp;
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chi1"  checked>-I1&nbsp;&nbsp;<input type=checkbox onchange='reoutcanvas("cano1")' id="chiris1">mark point&nbsp;&nbsp;
  color:<input type=text name=colori1 id='colori1' value="#ff0000" style='width:70px;height:10px;' onchange='reoutcanvas("cano1")'><br>
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chq1">-Q1&nbsp;&nbsp;<input type=checkbox onchange='reoutcanvas("cano1")' id="chqris1">mark point&nbsp;&nbsp;
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chq1"  checked>-Q1&nbsp;&nbsp;<input type=checkbox onchange='reoutcanvas("cano1")' id="chqris1">mark point&nbsp;&nbsp;
  color:<input type=text name=colorq1 id='colorq1' value="#00ff00" style='width:70px;height:10px;' onchange='reoutcanvas("cano1")'><br>
  <input type=checkbox onchange='reoutcanvas("cano1")' id="chp1">-PWR1<input type=checkbox onchange='reoutcanvas("cano1")' id="chpris1">mark point&nbsp;&nbsp;
  color:<input type=text name=colorp1 id='colorp1' value="#0000ff" style='width:70px;height:10px;' onchange='reoutcanvas("cano1")'>
@@ -509,7 +681,7 @@
  color:<input type=text name=colorp2 id='colorp2' value="#00009f  " style='width:70px;height:10px;' onchange='reoutcanvas("cano1")'>
  <hr>
  <input type=text name=zoomy1 id='zoomybox1' value="1" style='width:40px;height:10px;' onchange="synhro('zoomybox1','zoomyslider1');reoutcanvas('cano1');">
- <input id='zoomyslider1' type="range" min="0.05" max="20" step="0.05" value="1" onchange="synhro('zoomyslider1','zoomybox1');reoutcanvas('cano1');" name="zoomyslider1" style='topmargin:15;'>
+ <input id='zoomyslider1' type="range" min="0.005" max="20" step="0.005" value="1" onchange="synhro('zoomyslider1','zoomybox1');reoutcanvas('cano1');" name="zoomyslider1" style='topmargin:15;'>
  Zoom Y <br>
 
  <input type=text name=zoomx1 id='zoomxbox1' value="1" style='width:40px;height:10px;' onchange="synhro('zoomxbox1','zoomxslider1');reoutcanvas('cano1');">
@@ -533,22 +705,22 @@
 </div>
 <!-------------------------------------------------------------------------->
 <div class="l2hid"> <!-- Left panel2-->
- <input type=checkbox onchange='reoutcanvas("cano2");' id="chi1b" >-I1&nbsp;&nbsp;<input type=checkbox onchange='reoutcanvas("cano2");' id="chiris1b">mark point&nbsp;&nbsp;
+ <input type=checkbox onchange='reoutcanvas("cano2");' id="chi1b">-I1&nbsp;&nbsp;<input type=checkbox onchange='reoutcanvas("cano2");' id="chiris1b">mark point&nbsp;&nbsp;
  color:<input type=text name=colori1b id='colori1b' value="#ff0000" style='width:70px;height:10px;' onchange='reoutcanvas("cano2");'><br>
  <input type=checkbox onchange='reoutcanvas("cano2");' id="chq1b">-Q1&nbsp;&nbsp;<input type=checkbox onchange='reoutcanvas("cano2")' id="chqris1b">mark point&nbsp;&nbsp;
  color:<input type=text name=colorq1b id='colorq1b' value="#00ff00" style='width:70px;height:10px;' onchange='reoutcanvas("cano2")'><br>
  <input type=checkbox onchange='reoutcanvas("cano2");' id="chp1b">-PWR1<input type=checkbox onchange='reoutcanvas("cano2");' id="chpris1b">mark point&nbsp;&nbsp;
  color:<input type=text name=colorp1b id='colorp1b' value="#0000ff" style='width:70px;height:10px;' onchange='reoutcanvas("cano2")'>
  <hr>
- <input type=checkbox onchange='reoutcanvas("cano2");' id="chi2b">-I2&nbsp;&nbsp;<input type=checkbox onchange='reoutcanvas("cano2")' id="chiris2b">mark point&nbsp;&nbsp;
+ <input type=checkbox onchange='reoutcanvas("cano2");' id="chi2b"  checked>-I2&nbsp;&nbsp;<input type=checkbox onchange='reoutcanvas("cano2")' id="chiris2b">mark point&nbsp;&nbsp;
  color:<input type=text name=colori2b id='colori2b' value="#9f0000" style='width:70px;height:10px;' onchange='reoutcanvas("cano2")'><br>
- <input type=checkbox onchange='reoutcanvas("cano2");' id="chq2b">-Q2&nbsp;&nbsp;<input type=checkbox onchange='reoutcanvas("cano2")' id="chqris2b">mark point&nbsp;&nbsp;
+ <input type=checkbox onchange='reoutcanvas("cano2");' id="chq2b"   checked>-Q2&nbsp;&nbsp;<input type=checkbox onchange='reoutcanvas("cano2")' id="chqris2b">mark point&nbsp;&nbsp;
  color:<input type=text name=colorq2b id='colorq2b' value="#009f00" style='width:70px;height:10px;' onchange='reoutcanvas("cano2");'><br>
  <input type=checkbox onchange='reoutcanvas("cano2");' id="chp2b">-PWR2<input type=checkbox onchange='reoutcanvas("cano2");' id="chpris2b">mark point&nbsp;&nbsp;
  color:<input type=text name=colorp2b id='colorp2b' value="#00009f  " style='width:70px;height:10px;' onchange='reoutcanvas("cano2");'>
  <hr>
- <input type=text name=zoomy2 id='zoomybox2' value="1" style='width:40px;height:10px;' onchange="synhro('zoomybox2','zoomyslider2');reoutcanvas('cano1');">
- <input id='zoomyslider2' type="range" min=".05" max="20" step=".05" value="1" onchange="synhro('zoomyslider2','zoomybox2');reoutcanvas('cano2');" name="zoomyslider2" style='topmargin:15;'>
+ <input type=text name=zoomy2 id='zoomybox2' value="1" style='width:40px;height:10px;' onchange="synhro('zoomybox2','zoomyslider2');reoutcanvas('cano2');">
+ <input id='zoomyslider2' type="range" min=".005" max="20" step=".005" value="1" onchange="synhro('zoomyslider2','zoomybox2');reoutcanvas('cano2');" name="zoomyslider2" style='topmargin:15;'>
  Zoom Y <br>
   <input type=text name=zoomx2 id='zoomxbox2' value="1" style='width:40px;height:10px;' onchange="synhro('zoomxbox2','zoomxslider2');reoutcanvas('cano2');">
  <input id='zoomxslider2' type="range" min="0.05" max="20" step="0.05" value="1" onchange="synhro('zoomxslider2','zoomxbox2');reoutcanvas('cano2');" name="zoomxslider2" style='topmargin:15;'>
