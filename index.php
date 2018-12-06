@@ -73,6 +73,10 @@ echo "
     var q2=new Array(1000);
     var e1=new Array(1000);
     var e2=new Array(1000);
+//    var sf1=document.getElementById(\"startframe1\"); 
+//    var sf2=document.getElementById(\"startframe2\");
+//    sf1.value=$startframe1; 
+//    sf2.value=$startframe2; 
 ";
 
 // read file 1
@@ -231,11 +235,9 @@ fclose($f2);
         if (chi2.checked) for (var i=0;i<1000;i++) if (maxiq<i2[i]) maxiq=i2[i]; 
         if (chq1.checked) for (var i=0;i<1000;i++) if (maxiq<q1[i]) maxiq=q1[i]; 
         if (chq2.checked) for (var i=0;i<1000;i++) if (maxiq<q2[i]) maxiq=q2[i]; 
-
-        if (minscale < maxiq) zoomvalue=minscale/maxiq;////////////////////////////////
-        
+        if (minscale < maxiq) zoomvalue=minscale/maxiq;////////////////////////////////      
       }
-console.log ("zval="+zoomvalue+" maxiq="+maxiq);
+//console.log ("zval="+zoomvalue+" maxiq="+maxiq);
       zoomy.value=zoomvalue;
       zoomys.value=zoomvalue;
       
@@ -319,8 +321,6 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
         context.strokeStyle = "#ffffff";
         context.stroke();                
       }
-
-
       context.beginPath();
         context.moveTo(0, canvas.height - y0);
         context.lineTo(canvas.width, canvas.height - y0);
@@ -330,17 +330,17 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
       context.beginPath();       
       for (var y=(canvas.height - y0 -10); y>=0; y-=20) {
         context.moveTo(0, y);
-        context.lineTo(canvas.width,y);      
+        context.lineTo(canvas.width-40,y);      
       }
       for (var y=(canvas.height - y0 +10); y<canvas.height; y+=20) {
         context.moveTo(0, y);
-        context.lineTo(canvas.width,y);
+        context.lineTo(canvas.width-40,y);
       }
       
       context.strokeStyle = "#555555";
       context.stroke();        
       context.beginPath();      
-      context.font = "normal 9px monospacing";
+      context.font = "normal 10px monospacing";
       context.fillStyle = "#ffffff";
       for (var y=(canvas.height - y0 -10); y>=0; y-=20) context.fillText("+"+((canvas.height-y-y0)/zoomvalue).toFixed(2), canvas.width-40, y+4 );
       for (var y=(canvas.height - y0 +10); y<canvas.height; y+=20) context.fillText("-"+((canvas.height-y-y0)/zoomvalue).toFixed(2), canvas.width-40, y+4 );
@@ -356,9 +356,9 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
         var riskap=document.getElementById("chiris1");
         var  zoomz = document.getElementById("zerolevel1");
         var  zoomy = document.getElementById("zoomybox1");
-        var  zoomx = zooma;
+        var  zoomx = document.getElementById("zoomxbox1");
       } else if (canid=="cano2"){
-        var  zoomx = zoomb;
+        var  zoomx = document.getElementById("zoomxbox2");
         var  zoomz = document.getElementById("zerolevel2");
         var  zoomy = document.getElementById("zoomybox2");
         var outokp=document.getElementById("chi1b");
@@ -368,12 +368,12 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
       if (!outokp.checked) return;
       context.beginPath();
       context.strokeStyle = colorp.value;
-      for (var x=0;x<999;x++) {
-        context.moveTo(x, canvas.height-zoomz.value-zoomy.value*i1[x]); 
-        context.lineTo(x+1,canvas.height-zoomz.value-zoomy.value*i1[x+1]);
+      for (var x=0;x<999/zoomx.value;x+=1) {
+        context.moveTo(x/zoomx.value, canvas.height-zoomz.value-zoomy.value*i1[x]); 
+        context.lineTo(x/zoomx.value+1/zoomx.value,canvas.height-zoomz.value-zoomy.value*i1[x+1]);
         if (riskap.checked) {
-          context.moveTo(x-4, canvas.height-zoomz.value-zoomy.value*i1[x]); 
-          context.lineTo(x+4, canvas.height-zoomz.value-zoomy.value*i1[x]); 
+          context.moveTo(x/zoomx.value-4, canvas.height-zoomz.value-zoomy.value*i1[x]); 
+          context.lineTo(x/zoomx.value+4, canvas.height-zoomz.value-zoomy.value*i1[x]); 
         }
       }
       context.stroke();                   
@@ -387,9 +387,9 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
         var riskap=document.getElementById("chqris1");
         var  zoomz = document.getElementById("zerolevel1");
         var  zoomy = document.getElementById("zoomybox1");
-        var  zoomx = zooma;
+        var  zoomx = document.getElementById("zoomxbox1");
       } else if (canid=="cano2"){
-        var  zoomx = zoomb;
+        var  zoomx = document.getElementById("zoomxbox2");
         var  zoomz = document.getElementById("zerolevel2");
         var  zoomy = document.getElementById("zoomybox2");
         var outokp=document.getElementById("chq1b");
@@ -399,12 +399,12 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
       if (!outokp.checked) return;
       context.beginPath();
       context.strokeStyle = colorp.value;
-      for (var x=0;x<999;x++) {
-        context.moveTo(x, canvas.height-zoomz.value-zoomy.value*q1[x]); 
-        context.lineTo(x+1,canvas.height-zoomz.value-zoomy.value*q1[x+1]);
+      for (var x=0;x<999/zoomx.value;x++) {
+        context.moveTo(x/zoomx.value, canvas.height-zoomz.value-zoomy.value*q1[x]); 
+        context.lineTo(x/zoomx.value+1/zoomx.value,canvas.height-zoomz.value-zoomy.value*q1[x+1]);
         if (riskap.checked) {
-          context.moveTo(x-4, canvas.height-zoomz.value-zoomy.value*q1[x]); 
-          context.lineTo(x+4, canvas.height-zoomz.value-zoomy.value*q1[x]); 
+          context.moveTo(x/zoomx.value-4, canvas.height-zoomz.value-zoomy.value*q1[x]); 
+          context.lineTo(x/zoomx.value+4, canvas.height-zoomz.value-zoomy.value*q1[x]); 
         }
       }
       context.stroke();                   
@@ -418,9 +418,9 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
         var riskap=document.getElementById("chpris1");
         var  zoomz = document.getElementById("zerolevel1");
         var  zoomy = document.getElementById("zoomybox1");
-        var  zoomx = zooma;
+        var  zoomx = document.getElementById("zoomxbox1");
       } else if (canid=="cano2"){
-        var  zoomx = zoomb;
+        var  zoomx = document.getElementById("zoomxbox2");
         var  zoomz = document.getElementById("zerolevel2");
         var  zoomy = document.getElementById("zoomybox2");
         var outokp=document.getElementById("chp1b");
@@ -430,12 +430,12 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
       if (!outokp.checked) return;
       context.beginPath();
       context.strokeStyle = colorp.value;
-      for (var x=0;x<999;x++) {
-        context.moveTo(x, canvas.height-zoomz.value-zoomy.value*e1[x]); 
-        context.lineTo(x+1,canvas.height-zoomz.value-zoomy.value*e1[x+1]);
+      for (var x=0;x<999/zoomx.value;x++) {
+        context.moveTo(x/zoomx.value, canvas.height-zoomz.value-zoomy.value*e1[x]); 
+        context.lineTo(x/zoomx.value+1/zoomx.value,canvas.height-zoomz.value-zoomy.value*e1[x+1]);
         if (riskap.checked) {
-          context.moveTo(x-4, canvas.height-zoomz.value-zoomy.value*e1[x]); 
-          context.lineTo(x+4, canvas.height-zoomz.value-zoomy.value*e1[x]); 
+          context.moveTo(x/zoomx.value-4, canvas.height-zoomz.value-zoomy.value*e1[x]); 
+          context.lineTo(x/zoomx.value+4, canvas.height-zoomz.value-zoomy.value*e1[x]); 
         }
       }
       context.stroke();                   
@@ -450,24 +450,24 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
         var riskap=document.getElementById("chiris2");
         var  zoomz = document.getElementById("zerolevel1");
         var  zoomy = document.getElementById("zoomybox1");
-        var  zoomx = zooma;
+        var  zoomx = document.getElementById("zoomxbox1");
       } else if (canid=="cano2"){
+        var  zoomx = document.getElementById("zoomxbox2");
         var  zoomz = document.getElementById("zerolevel2");
         var  zoomy = document.getElementById("zoomybox2");
         var outokp=document.getElementById("chi2b");
         var colorp=document.getElementById("colori2b");
         var riskap=document.getElementById("chiris2b");        
-        var  zoomx = zoomb;
       } else return;
       if (!outokp.checked) return;
       context.beginPath();
       context.strokeStyle = colorp.value;
-      for (var x=0;x<999;x++) {
-        context.moveTo(x, canvas.height-zoomz.value-zoomy.value*i2[x]); 
-        context.lineTo(x+1,canvas.height-zoomz.value-zoomy.value*i2[x+1]);
+      for (var x=0;x<999/zoomx.value;x++) {
+        context.moveTo(x/zoomx.value, canvas.height-zoomz.value-zoomy.value*i2[x]); 
+        context.lineTo(x/zoomx.value+1/zoomx.value,canvas.height-zoomz.value-zoomy.value*i2[x+1]);
         if (riskap.checked) {
-          context.moveTo(x-4, canvas.height-zoomz.value-zoomy.value*i2[x]); 
-          context.lineTo(x+4, canvas.height-zoomz.value-zoomy.value*i2[x]); 
+          context.moveTo(x/zoomx.value-4, canvas.height-zoomz.value-zoomy.value*i2[x]); 
+          context.lineTo(x/zoomx.value+4, canvas.height-zoomz.value-zoomy.value*i2[x]); 
         }
       }
       context.stroke();                   
@@ -481,9 +481,9 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
         var riskap=document.getElementById("chqris2");
         var  zoomz = document.getElementById("zerolevel1");
         var  zoomy = document.getElementById("zoomybox1");
-        var  zoomx = zooma;
+        var  zoomx = document.getElementById("zoomxbox1");
       } else if (canid=="cano2"){
-        var  zoomx = zoomb;
+        var  zoomx = document.getElementById("zoomxbox2");
         var  zoomz = document.getElementById("zerolevel2");
         var  zoomy = document.getElementById("zoomybox2");
         var outokp=document.getElementById("chq2b");
@@ -493,12 +493,12 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
       if (!outokp.checked) return;
       context.beginPath();
       context.strokeStyle = colorp.value;
-      for (var x=0;x<999;x++) {
-        context.moveTo(x, canvas.height-zoomz.value-zoomy.value*q2[x]); 
-        context.lineTo(x+1,canvas.height-zoomz.value-zoomy.value*q2[x+1]);
+      for (var x=0;x<999/zoomx.value;x++) {
+        context.moveTo(x/zoomx.value, canvas.height-zoomz.value-zoomy.value*q2[x]); 
+        context.lineTo(x/zoomx.value+1/zoomx.value,canvas.height-zoomz.value-zoomy.value*q2[x+1]);
         if (riskap.checked) {
-          context.moveTo(x-4, canvas.height-zoomz.value-zoomy.value*q2[x]); 
-          context.lineTo(x+4, canvas.height-zoomz.value-zoomy.value*q2[x]); 
+          context.moveTo(x/zoomx.value-4, canvas.height-zoomz.value-zoomy.value*q2[x]); 
+          context.lineTo(x/zoomx.value+4, canvas.height-zoomz.value-zoomy.value*q2[x]); 
         }
       }
       context.stroke();                   
@@ -512,9 +512,9 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
         var riskap=document.getElementById("chpris2");
         var  zoomz = document.getElementById("zerolevel1");
         var  zoomy = document.getElementById("zoomybox1");
-        var  zoomx = zooma;
+        var  zoomx = document.getElementById("zoomxbox1");
       } else if (canid=="cano2"){
-        var  zoomx = zoomb;
+        var  zoomx = document.getElementById("zoomxbox2");
         var  zoomz = document.getElementById("zerolevel2");
         var  zoomy = document.getElementById("zoomybox2");
         var outokp=document.getElementById("chp2b");
@@ -525,11 +525,11 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
       context.beginPath();
       context.strokeStyle = colorp.value;
       for (var x=0;x<999;x++) {
-        context.moveTo(x, canvas.height-zoomz.value-zoomy.value*e2[x]); 
-        context.lineTo(x+1,canvas.height-zoomz.value-zoomy.value*e2[x+1]);
+        context.moveTo(x/zoomx.value, canvas.height-zoomz.value-zoomy.value*e2[x]); 
+        context.lineTo(x/zoomx.value+1/zoomx.value,canvas.height-zoomz.value-zoomy.value*e2[x+1]);
         if (riskap.checked) {
-          context.moveTo(x-4, canvas.height-zoomz.value-zoomy.value*e2[x]); 
-          context.lineTo(x+4, canvas.height-zoomz.value-zoomy.value*e2[x]); 
+          context.moveTo(x/zoomx.value-4, canvas.height-zoomz.value-zoomy.value*e2[x]); 
+          context.lineTo(x/zoomx.value+4, canvas.height-zoomz.value-zoomy.value*e2[x]); 
         }
       }
       context.stroke();                   
@@ -543,14 +543,15 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
       var canvas = document.getElementById(canid);
       var context = canvas.getContext("2d");
       clsscale(canid);
-      paintscale(canid,"#000000"); //killit!
-      outgrid(canid);
+      if (canid=="cano1") paintscale(canid,"#0a0000"); //killit!
+      else paintscale(canid,"#00000a");
       outi1(canid);
       outi2(canid);
       outq1(canid);
       outq2(canid);
       outp1(canid);
       outp2(canid);
+      outgrid(canid);
     }
     window.onload = function() { 
       synhro('zoombox1','zoomslider1');
@@ -586,7 +587,7 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
     <input type=radio name=bitrate1 value=16 checked>16
    </td>
    <td>Big/Litle<input type=checkbox name=bl1 id='bl1'></td>
-   <td>Start frame: <input type=text name=startframe1 size=5 value="0"></td>
+   <td>Start frame: <input type=text name='startframe1' id='startframe1' size=5 value="0"></td>
    <td>Zoom A
     <input id='zoomslider1' type="range" min="1" max="1000" step="1" value="1" onchange='synhro("zoomslider1","zoombox1");' name="zoomslider1" style='topmargin:15;'>
     <input type=text name=zoom1 id='zoombox1' value="1" style='width:50px;' onchange="synhro('zoombox1','zoomslider1');">  
@@ -611,7 +612,7 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
     <input type=radio name=bitrate2 value=16 checked>16
    </td>
    <td>Big/Litle<input type=checkbox name=bl2 id='bl2'></td>
-   <td>Start frame: <input type=text name=startframe2 size=5 value="0"></td>
+   <td>Start frame: <input type=text name='startframe2' size=5 value="0" id='startframe2'></td>
    <td>Zoom B
     <input id='zoomslider2' type="range" min="1" max="1000" step="1" value="1" onchange="synhro('zoomslider2','zoombox2');" name="zoomslider2" style='topmargin:15;'>
     <input type=text name=zoom2 id='zoombox2' value="1" style='width:50px;' onchange="synhro('zoombox2','zoomslider2');">  
@@ -641,7 +642,7 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
  Zoom Y <input type=checkbox onchange='reoutcanvas("cano2");' id="autoy1" checked><br>
 
  <input type=text name=zoomx1 id='zoomxbox1' value="1" style='width:40px;height:10px;' onchange="synhro('zoomxbox1','zoomxslider1');reoutcanvas('cano1');">
- <input id='zoomxslider1' type="range" min="0.05" max="20" step="0.05" value="1" onchange="synhro('zoomxslider1','zoomxbox1');reoutcanvas('cano1');" name="zoomxslider1" style='topmargin:15;'>
+ <input id='zoomxslider1' type="range" min="0.01" max="1" step="0.01" value="1" onchange="synhro('zoomxslider1','zoomxbox1');reoutcanvas('cano1');" name="zoomxslider1" style='topmargin:15;'>
  Zoom X <br>
 
 
@@ -679,7 +680,7 @@ console.log ("zval="+zoomvalue+" maxiq="+maxiq);
  <input id='zoomyslider2' type="range" min=".005" max="20" step=".005" value="1" onchange="synhro('zoomyslider2','zoomybox2');reoutcanvas('cano2');" name="zoomyslider2" style='topmargin:15;'>
  Zoom Y <input type=checkbox onchange='reoutcanvas("cano2");' id="autoy2" checked><br>
   <input type=text name=zoomx2 id='zoomxbox2' value="1" style='width:40px;height:10px;' onchange="synhro('zoomxbox2','zoomxslider2');reoutcanvas('cano2');">
- <input id='zoomxslider2' type="range" min="0.05" max="20" step="0.05" value="1" onchange="synhro('zoomxslider2','zoomxbox2');reoutcanvas('cano2');" name="zoomxslider2" style='topmargin:15;'>
+ <input id='zoomxslider2' type="range" min="0.01" max="1" step="0.01" value="1" onchange="synhro('zoomxslider2','zoomxbox2');reoutcanvas('cano2');" name="zoomxslider2" style='topmargin:15;'>
  Zoom X <br>
 
 
