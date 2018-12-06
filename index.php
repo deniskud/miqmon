@@ -125,86 +125,10 @@ while (($i++ < 1000 ) AND !feof($f2)){ //read 1000 frames file B
   if ($y>32767) $y=$y-65536; // 2unsigned    
   echo "q2[$i]=".$y.";"; 
 }
-fclose($f);
+fclose($f2);
 
-
-/*
-  $y[1][$i]=ord(fgetc($f)); // I
-  if ($byteorder=='off') $y[1][$i]=  $y[1][$i] + 256 * ord(fgetc($f));
-  else $y[1][$i]=$y[1][$i] * 256 + ord(fgetc($f));
-  if ($y[1][$i]>32767) $y[1][$i]=$y[1][$i]-65536; // 2unsigned    
-  $y[2][$i]=ord(fgetc($f)); // Q
-  if ($byteorder=='off') $y[2][$i]=  $y[2][$i] + 256 * ord(fgetc($f));
-  else $y[2][$i]=$y[2][$i] * 256 + ord(fgetc($f));
-  if ($y[2][$i]>32767) $y[2][$i]=$y[2][$i]-65536; // 2unsigned    
-
-*/
-
-/*
-
-
-
-
-
-
-
-
-  $y[1][$i]=ord(fgetc($f));
-  if ($bitrate==)8{
-    if ($y[1][$i]>127) $y[1][$i]=$y[1][$i]-256; // 2unsigned    
-  }
-
-  if ($bitrate==)12{
-    $tmpi=ord(fgetc($f));
-    
-    if ($y[1][$i]>2047) $y[1][$i]=$y[1][$i]-4096; // 2unsigned        
-  }
-
-  if ($bitrate==16) { 
-    if ($byteorder==0) $y[1][$i]= round(( $y[1][$i] + 256 * ord(fgetc($f)))/256);
-    else $y[1][$i]=round(( $y[1][$i] * 256 + ord(fgetc($f)))/256);
-    if ($y[1][$i]>32767) $y[1][$i]=$y[1][$i]-65536; // 2unsigned    
-  }  
- */
-
-/*
-  $sred=0;
-  for ($xtmp=0; $xtmp<$zoom; $xtmp++){ //zoom
-    //считали первую часть
-    $y[1][$i]=ord(fgetc($f));
-    if ($bitrate==16) { //если 16бит приводим к 8-ми
-    //big end
-      if ($byteorder==0) {
-          $y[1][$i]= round(( $y[1][$i] + 256 * ord(fgetc($f)))/256);
-      }
-   // little end
-      else $y[1][$i]=round(( $y[1][$i] * 256 + ord(fgetc($f)))/256);
-    }
-   if ($y[1][$i]>127) $y[1][$i]=$y[1][$i]-256; //привели к знаковуму [-127..+127]
-    //считали вторую
-    $y[2][$i]=ord(fgetc($f));
-    if ($bitrate==16) { //если 16бит приводим к 8-ми
-    //big endmonitor.php
-      if ($byteorder==0) {
-        $y[2][$i]=round(( $y[2][$i] + 256 * ord(fgetc($f)))/256);
-      }
-    //little end
-      else $y[2][$i]=round(( $y[2][$i] * 256 + ord(fgetc($f)))/256);
-    }
-  if ($y[2][$i]>127) $y[2][$i]=$y[2][$i]-256;
-    $y[3][$i]=round(sqrt(($y[1][$i]*$y[1][$i]) + ($y[2][$i]*$y[2][$i]) )  );
-    $sred=$sred+$y[3][$i];
-  }
-  if ($zoomtype !== 0) $y[3][$i]=round($sred/$zoom);
-*/
-
-
-
-?>  
-  
-  
-  
-    ///////// sinus TMP //////////  
+?>   
+     ///////// sinus TMP //////////  
     if (filename1=='demosinus' && filename2=='demosinus') {
       for (var x=0; x<1000; x++){
         i1[x]=127*Math.sin(Math.PI*x/90);
@@ -215,8 +139,7 @@ fclose($f);
         e2[x]=Math.sqrt(i2[x]*i2[x]+q2[x]*q2[x]);
       }
     }
-    ///////////////////
-                 
+    ///////////////////                 
     function clsscale(canid){ //cls convas
       var canvas = document.getElementById(canid);
       var context = canvas.getContext("2d");
@@ -244,22 +167,33 @@ fclose($f);
       //zeroline
       var zoomz = document.getElementById("zerolevel1");
       var zoomy = document.getElementById("zoomybox1");
+      var zoomyauto = document.getElementById("autoy1");
       var zoomxp = document.getElementById("zoomxbox1");
-      var sr = document.getElementById("sr1");
-      var tgs11 = document.getElementById("tgs11");
-      var tgs21 = document.getElementById("tgs21");
-      var tgs31 = document.getElementById("tgs31");
-      var tgs41 = document.getElementById("tgs41");
-      var tgs51 = document.getElementById("tgs51");
-      var tgs61 = document.getElementById("tgs61");
-      var tgs71 = document.getElementById("tgs71");
-      var tgs12 = document.getElementById("tgs12");
-      var tgs22 = document.getElementById("tgs22");
-      var tgs32 = document.getElementById("tgs32");
-      var tgs42 = document.getElementById("tgs42");
-      var tgs52 = document.getElementById("tgs52");
-      var tgs62 = document.getElementById("tgs62");
-      var tgs72 = document.getElementById("tgs72");
+      var zoomys = document.getElementById("zoomyslider1");
+
+      var chi1 = document.getElementById("chi1");// I @A checkbox
+      var chq1 = document.getElementById("chq1");// Q @A checkbox
+      var chi2 = document.getElementById("chi2");// I @B checkbox
+      var chq2 = document.getElementById("chq2");// Q @B checkbox
+
+      var sr = document.getElementById("sr1"); //samplerate
+
+      var tgs11 = document.getElementById("tgs11"); //time checkbox
+      var tgs21 = document.getElementById("tgs21"); //time checkbox
+      var tgs31 = document.getElementById("tgs31"); //time checkbox
+      var tgs41 = document.getElementById("tgs41"); //time checkbox
+      var tgs51 = document.getElementById("tgs51"); //time checkbox
+      var tgs61 = document.getElementById("tgs61"); //time checkbox
+      var tgs71 = document.getElementById("tgs71"); //time checkbox
+
+      var tgs12 = document.getElementById("tgs12"); //time checkbox
+      var tgs22 = document.getElementById("tgs22"); //time checkbox
+      var tgs32 = document.getElementById("tgs32"); //time checkbox
+      var tgs42 = document.getElementById("tgs42"); //time checkbox
+      var tgs52 = document.getElementById("tgs52"); //time checkbox
+      var tgs62 = document.getElementById("tgs62"); //time checkbox
+      var tgs72 = document.getElementById("tgs72"); //time checkbox
+
       var scalems1 = tgs11;
       var scalems2 = tgs21;
       var scalems3 = tgs31;
@@ -267,10 +201,17 @@ fclose($f);
       var scalems5 = tgs51;
       var scalems6 = tgs61;
       var scalems7 = tgs71;         
+      
       if (canv=="cano2") {
         zoomz = document.getElementById("zerolevel2");
         zoomy = document.getElementById("zoomybox2");
+        zoomys = document.getElementById("zoomyslider2");
         zoomxp = document.getElementById("zoomxbox2");
+        zoomyauto = document.getElementById("autoy2");
+        chi1 = document.getElementById("chi1b");
+        chq1 = document.getElementById("chq1b");
+        chi2 = document.getElementById("chi2b");
+        chq2 = document.getElementById("chq2b");
         sr = document.getElementById("sr2");
         scalems1 = tgs12;
         scalems2 = tgs22;
@@ -282,6 +223,21 @@ fclose($f);
       }      
       var y0=zoomz.value;
       var zoomvalue=zoomy.value;
+      var maxiq=0;
+      var minscale=canvas.width-y0;
+      if (minscale > y0) minscale = y0;
+      if (zoomyauto.checked){ //find max in file A
+        if (chi1.checked) for (var i=0;i<1000;i++) {if (maxiq<i1[i]) maxiq=i1[i]}; 
+        if (chi2.checked) for (var i=0;i<1000;i++) if (maxiq<i2[i]) maxiq=i2[i]; 
+        if (chq1.checked) for (var i=0;i<1000;i++) if (maxiq<q1[i]) maxiq=q1[i]; 
+        if (chq2.checked) for (var i=0;i<1000;i++) if (maxiq<q2[i]) maxiq=q2[i]; 
+
+        if (minscale < maxiq) zoomvalue=minscale/maxiq;////////////////////////////////
+        
+      }
+console.log ("zval="+zoomvalue+" maxiq="+maxiq);
+      zoomy.value=zoomvalue;
+      zoomys.value=zoomvalue;
       
       var zoomx=zoomxp.value;
       zoomx=1/zoomx;
@@ -682,7 +638,7 @@ fclose($f);
  <hr>
  <input type=text name=zoomy1 id='zoomybox1' value="1" style='width:40px;height:10px;' onchange="synhro('zoomybox1','zoomyslider1');reoutcanvas('cano1');">
  <input id='zoomyslider1' type="range" min="0.005" max="20" step="0.005" value="1" onchange="synhro('zoomyslider1','zoomybox1');reoutcanvas('cano1');" name="zoomyslider1" style='topmargin:15;'>
- Zoom Y <br>
+ Zoom Y <input type=checkbox onchange='reoutcanvas("cano2");' id="autoy1" checked><br>
 
  <input type=text name=zoomx1 id='zoomxbox1' value="1" style='width:40px;height:10px;' onchange="synhro('zoomxbox1','zoomxslider1');reoutcanvas('cano1');">
  <input id='zoomxslider1' type="range" min="0.05" max="20" step="0.05" value="1" onchange="synhro('zoomxslider1','zoomxbox1');reoutcanvas('cano1');" name="zoomxslider1" style='topmargin:15;'>
@@ -721,7 +677,7 @@ fclose($f);
  <hr>
  <input type=text name=zoomy2 id='zoomybox2' value="1" style='width:40px;height:10px;' onchange="synhro('zoomybox2','zoomyslider2');reoutcanvas('cano2');">
  <input id='zoomyslider2' type="range" min=".005" max="20" step=".005" value="1" onchange="synhro('zoomyslider2','zoomybox2');reoutcanvas('cano2');" name="zoomyslider2" style='topmargin:15;'>
- Zoom Y <br>
+ Zoom Y <input type=checkbox onchange='reoutcanvas("cano2");' id="autoy2" checked><br>
   <input type=text name=zoomx2 id='zoomxbox2' value="1" style='width:40px;height:10px;' onchange="synhro('zoomxbox2','zoomxslider2');reoutcanvas('cano2');">
  <input id='zoomxslider2' type="range" min="0.05" max="20" step="0.05" value="1" onchange="synhro('zoomxslider2','zoomxbox2');reoutcanvas('cano2');" name="zoomxslider2" style='topmargin:15;'>
  Zoom X <br>
