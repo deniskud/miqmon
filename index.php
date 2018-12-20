@@ -7,6 +7,7 @@
   <style>
    select { width: 200px;}      
     .zzpoint {position: fixed ; left: 12px; top: 12px; z-index: 1;}
+    .nav1 {position: fixed ; left: 12px; top: 700px; z-index: 1;}
     .hid {position: fixed; left: 0px; top: -73px; width: 100%; height: 80px; 
     background: #777777; color: #111111; margin-top: 5px; 
     transition: top .2s linear; z-index: 10;font-family:arial;}
@@ -20,6 +21,9 @@
     background: #777777; color: #111111; margin-top: 5px; 
     transition: left .2s linear; z-index: 10;font-family:monospace;}
     .l2hid:hover {left: 0px; z-index: 10;}
+    .expl {position: fixed; left: 0px; top: 616px; width: 360px; height: 50px; 
+    background: #777777; color: #111111; margin-top: 5px; 
+    transition: left .2s linear; z-index: 10;font-family:monospace;}
   </style>
   <script>
   ////////////////// PHP
@@ -75,51 +79,72 @@ echo "
 //    sf2.value=$startframe2; 
 ";
 // read file 1
+$filesize1=0;
+$filesize2=0;
 if ($filename1!='demosinus'){
+  $filesize1=filesize("iq/".$filename1);// *4/$bitrate1;
+  $framesize1=$filesize1*4/$bitrate1;
   $f = fopen("iq/".$filename1, "r");
-// shift @startframe
-  while ($startframe1-- >0){
-    $tmp=fgetc($f);$tmp=fgetc($f);
-    if ($bitrate1==12) $tmp=fgetc($f);
-    if ($bitrate1==16) {$tmp=fgetc($f);$tmp=fgetc($f);}
-  }
+  if ($bitrate1==8) $shift=$startframe1*2;
+  if ($bitrate1==12) $shift=$startframe1*3;
+  if ($bitrate1==16) $shift=$startframe1*4;
+  if ($filesize1>=$shift) fseek($f,$shift);
   $i=0;
   while (($i++ < 1000 ) && !(feof($f))){ //read 1000 frames file A
-//bitrate1=16bit
     $y=ord(fgetc($f)); // I
-    if ($byteorder1=='off') $y=$y + 256 * ord(fgetc($f));
-    else $y * 256 + ord(fgetc($f));
-    if ($y>32767) $y=$y-65536; // 2unsigned    
+    if ($bitrate1==8){ 
+      if ($y>127) $y=$y-256;
+    } 
+    if ($bitrate1==16){
+      if ($byteorder1=='off') $y=$y + 256 * ord(fgetc($f));
+      else $y * 256 + ord(fgetc($f));
+      if ($y>32767) $y=$y-65536; // 2unsigned    
+    }
     echo "i1[$i]=".$y.";"; 
     $y=ord(fgetc($f)); // Q
-    if ($byteorder1=='off') $y=$y + 256 * ord(fgetc($f));
-    else $y * 256 + ord(fgetc($f));
-    if ($y>32767) $y=$y-65536; // 2unsigned    
+    if ($bitrate1==8){ 
+      if ($y>127) $y=$y-256;
+    } 
+    if ($bitrate1==16){
+      if ($byteorder1=='off') $y=$y + 256 * ord(fgetc($f));
+      else $y * 256 + ord(fgetc($f));
+      if ($y>32767) $y=$y-65536; // 2unsigned    
+    }
     echo "q1[$i]=".$y.";"; 
   }
   fclose($f);
 }
+echo "\n";
 if ($filename2!='demosinus'){
+  $filesize2=filesize("iq/".$filename2);// *4/$bitrate1;
+  $framesize2=$filesize2*4/$bitrate2;
   $f2 = fopen("iq/".$filename2, "r");
 // shift @startframe
-  while ($startframe2-- >0){ //farmes i+q
-    $tmp=fgetc($f2); $tmp=fgetc($f2);  //read 2 byts
-    if ($bitrate2==12) $tmp=fgetc($f2); //read 3 byts
-    if ($bitrate2==16) {$tmp=fgetc($f2);$tmp=fgetc($f2);}//read 4 byts
-  }
+  if ($bitrate2==8) $shift=$startframe2*2;
+  if ($bitrate2==12) $shift=$startframe2*3;
+  if ($bitrate2==16) $shift=$startframe2*4;
+  if ($filesize2>=$shift) fseek($f2,$shift);
   $i=0;
-  echo "\n";
   while (($i++ < 1000 ) AND !feof($f2)){ //read 1000 frames file B
-//bitrate2=16bit
     $y=ord(fgetc($f2)); // I
-    if ($byteorder2=='off') $y=$y + 256 * ord(fgetc($f2));
-    else $y * 256 + ord(fgetc($f2));
-    if ($y>32767) $y=$y-65536; // 2unsigned    
+    if ($bitrate2==8){ 
+      if ($y>127) $y=$y-256;
+    } 
+    if ($bitrate2==16){
+      if ($byteorder2=='off') $y=$y + 256 * ord(fgetc($f2));
+      else $y * 256 + ord(fgetc($f2));
+      if ($y>32767) $y=$y-65536; // 2unsigned    
+    }
     echo "i2[$i]=".$y.";"; 
     $y=ord(fgetc($f2)); // Q
-    if ($byteorder2=='off') $y=$y + 256 * ord(fgetc($f2));
-    else $y * 256 + ord(fgetc($f2));
-    if ($y>32767) $y=$y-65536; // 2unsigned    
+    if ($bitrate2==8){ 
+      if ($y>127) $y=$y-256;
+    } 
+    if ($bitrate2==16){
+      if ($byteorder2=='off') $y=$y + 256 * ord(fgetc($f2));
+      else $y * 256 + ord(fgetc($f2));
+      if ($y>32767) $y=$y-65536; // 2unsigned    
+    }
     echo "q2[$i]=".$y.";"; 
   }
   fclose($f2);
@@ -523,6 +548,45 @@ if ($filename2!='demosinus'){
 //      outp2(canid);
       outgrid(canid); //reout 4 top layer
     }
+    function reread(){
+      var fn1=document.getElementById('filename1');
+      var br18=document.getElementById('br18');
+      var br112=document.getElementById('br112');
+      var br116=document.getElementById('br116');
+      var sf1=document.getElementById('startframe1');
+      var z1=document.getElementById('zoombox1');
+
+      var fn2=document.getElementById('filename2');
+      var br28=document.getElementById('br28');
+      var br212=document.getElementById('br212');
+      var br216=document.getElementById('br216');
+      var sf2=document.getElementById('startframe2');
+      var z2=document.getElementById('zoombox2');
+
+
+      var urlstr='index.php?filename1='+fn1.value+"&bitrate1=";
+      if (br18.checked) urlstr+='8&startframe1=';
+      if (br112.checked) urlstr+='12&startframe1=';
+      if (br116.checked) urlstr+='16&startframe1=';
+      urlstr+=sf1.value;
+      urlstr+="&zoom1=";
+      urlstr+=z1.value;
+
+      urlstr+='&filename2=';
+      urlstr+=fn2.value;
+      urlstr+="&bitrate2="
+      if (br28.checked) urlstr+='8&startframe2=';
+      if (br212.checked) urlstr+='12&startframe2=';
+      if (br216.checked) urlstr+='16&startframe2=';
+      urlstr+=sf2.value;
+      urlstr+="&zoom2=";
+      urlstr+=z2.value;
+
+      window.location.replace(urlstr);
+//  console.log(urlstr);      
+
+    
+    }
     window.onload = function() { 
       synhro('zoombox1','zoomslider1');
       synhro('zoombox2','zoomslider2');      
@@ -539,7 +603,7 @@ if ($filename2!='demosinus'){
  <table border=0 width=100%>
   <tr>
    <td >&nbsp; &nbsp;File A :
- <select name=filename1 >
+ <select name=filename1 id='filename1'>
  <?php 
    $files = scandir("./iq");
    foreach($files as $f) {
@@ -550,9 +614,9 @@ if ($filename2!='demosinus'){
 </select>
    </td>
    <td>
-    <input type=radio name=bitrate1 value=8>8
-    <input type=radio name=bitrate1 value=12>12
-    <input type=radio name=bitrate1 value=16 checked>16
+    <input id='br18' type=radio name=bitrate1 value=8 <?php if ($bitrate1==8) echo "checked";?>>8
+    <input id='br112' type=radio name=bitrate1 value=12 <?php if ($bitrate1==12) echo "checked";?>>12
+    <input id='br116' type=radio name=bitrate1 value=16 <?php if ($bitrate1==16) echo "checked";?>>16
    </td>
    <td>Big/Litle<input type=checkbox name=bl1 id='bl1'></td>
    <td>Start frame: <input type=text name='startframe1' id='startframe1' size=5 value="0"></td>
@@ -564,7 +628,7 @@ if ($filename2!='demosinus'){
   </tr> <!--  second:-->
   <tr>
    <td>&nbsp; &nbsp;File B :
- <select name=filename2 >
+ <select name=filename2 id='filename2'>
  <?php 
    $files = scandir("./iq");
    foreach($files as $f) {
@@ -575,9 +639,9 @@ if ($filename2!='demosinus'){
 </select>
    </td>
    <td>
-    <input type=radio name=bitrate2 value=8>8
-    <input type=radio name=bitrate2 value=12>12
-    <input type=radio name=bitrate2 value=16 checked>16
+    <input id='br28' type=radio name=bitrate2 value=8 <?php if ($bitrate2==8) echo "checked";?>>8
+    <input id='br212' type=radio name=bitrate2 value=12 <?php if ($bitrate2==12) echo "checked";?>>12
+    <input id='br216' type=radio name=bitrate2 value=16 <?php if ($bitrate2==16) echo "checked";?>>16
    </td>
    <td>Big/Litle<input type=checkbox name=bl2 id='bl2'></td>
    <td>Start frame: <input type=text name='startframe2' size=5 value="0" id='startframe2'></td>
@@ -685,8 +749,7 @@ if ($filename2!='demosinus'){
  <input type=text name=zerolevel2 id='zerolevel2' value="150" style='width:40px;height:10px;' onchange="synhro('zerolevel2','zeroslider2');reoutcanvas('cano2')">
  <input id='zeroslider2' type="range" min="1" max="300" step="1" value="150" onchange="synhro('zeroslider2','zerolevel2');reoutcanvas('cano2');" name="zerolider2" style='topmargin:15;'>
  Zero<br>
- SamleRate:<input type=text name=sr2 id='sr2' value="5000" style='width:50px;height:10px;' onchange='reoutcanvas("cano2")'>KHz 
- <br>Grid time:<br>
+ SamleRate:<input type=text name=sr2 id='sr2' value="5000" style='width:50px;height:10px;' onchange='reoutcanvas("cano2")'>KHz<br>
  <font size="-2">
   <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs12"><label for="tgs12">sec</label>
   <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs22"><label for="tgs22">1/10</label>
@@ -699,6 +762,12 @@ if ($filename2!='demosinus'){
 </div>
 <canvas id="cano1" width="1000" height="300" class="zzpoint"></canvas> 
 <canvas id="cano2" width="1000" height="300" class="zzpoint2"></canvas> 
+<div class='expl'>
+0<input type='range' id='nav1' value=<?php echo $startframe1;?> min="0" max=<?php if ($framesize1>1000) echo($framesize1-1000); else echo "0";?> step='100' name='nav1' onchange="synhro('nav1','nav1box');synhro('nav1','startframe1');reread();" autofocus>
+<?php echo($framesize1);?> &nbsp;&nbsp;
+<input type=text name=nav1box id='nav1box' value="<?php echo $startframe1;?>" style='width:40px;height:10px;' onchange="synhro('nav1box','nav1');reread();">
+
+</div>
 </body>
 </html>
 
