@@ -28,30 +28,156 @@
   <script>
   ////////////////// PHP
 <?php
-/*
-if (!$zoomtype) $zoomtype=0;
-if (!$type) $type='nbr';
-*/
+// top panel
 $filename1=@$_GET['filename1'];
+if (!$filename1) $filename1='demosinus'; //default file 2 out
 $filename2=@$_GET['filename2'];
+if (!$filename2) $filename2='demosinus'; //
 $bitrate1=@$_GET['bitrate1'];
 $bitrate2=@$_GET['bitrate2'];
-$startframe1=@$_GET['startframe1'];
-$startframe2=@$_GET['startframe2'];
-$zoom1=@$_GET['zoom1'];
-$zoom2=@$_GET['zoom2'];
-$byteorder1=@$_GET['bl1'];
-$byteorder2=@$_GET['bl2'];
-if (!$filename1) $filename1='demosinus'; //default file 2 out
-if (!$filename2) $filename2='demosinus'; //
 if (!$bitrate1) $bitrate1=16;
 if (!$bitrate2) $bitrate2=16;
+$startframe1=@$_GET['startframe1'];
+$startframe2=@$_GET['startframe2'];
 if (!$startframe1) $startframe1=0;
 if (!$startframe2) $startframe2=0;
+$zoom1=@$_GET['zoom1'];
+$zoom2=@$_GET['zoom2'];
 if (!$zoom1) $zoom1=1;
 if (!$zoom2) $zoom2=1;
+$byteorder1=@$_GET['bl1'];
+$byteorder2=@$_GET['bl2'];
 if (!$byteorder1) $byteorder1='off';
 if (!$byteorder2) $byteorder2='off';
+/////////////////////// left panel TOP
+$chi1=@$_GET['chi1'];
+$chq1=@$_GET['chq1'];
+$chp1=@$_GET['chp1'];
+if (!$chi1) $chi1="false"; else $chi1="true";
+if (!$chq1) $chq1="false"; else $chq1="true";
+if (!$chp1) $chp1="false"; else $chp1="true";
+
+$chiris1=@$_GET['chiris1'];
+$chqris1=@$_GET['chqris1'];
+$chpris1=@$_GET['chpris1'];
+if (!$chiris1) $chiris1="false"; else $chiris1="true";
+if (!$chqris1) $chqris1="false"; else $chqris1="true";
+if (!$chpris1) $chpris1="false"; else $chpris1="true";
+
+$colori1=@$_GET['colori1'];
+$colorq1=@$_GET['colorq1'];
+$colorp1=@$_GET['colorp1'];
+if (!$colori1) $colori1='#ff0000';
+if (!$colorq1) $colorq1='#00ff00';
+if (!$colorp1) $colorp1='#0000ff';
+
+$chi2=@$_GET['chi2'];
+$chq2=@$_GET['chq2'];
+$chp2=@$_GET['chp2'];
+if (!$chi2) $chi2="false"; else $chi2="true";
+if (!$chq2) $chq2="false"; else $chq2="true";
+if (!$chp2) $chp2="false"; else $chp2="true";
+
+$chiris2=@$_GET['chiris2'];
+$chqris2=@$_GET['chqris2'];
+$chpris2=@$_GET['chpris2'];
+if (!$chiris2) $chiris2="false"; else $chiris2="true";
+if (!$chqris2) $chqris2="false"; else $chqris2="true";
+if (!$chpris2) $chpris2="false"; else $chpris2="true";
+$colori2=@$_GET['colori2'];
+$colorq2=@$_GET['colorq2'];
+$colorp2=@$_GET['colorp2'];
+if (!$colori2) $colori2='#ff5555';
+if (!$colorq2) $colorq2='#55ff55';
+if (!$colorp2) $colorp2='#5555ff';
+$zoomy1=@$_GET['zoomy1'];
+$zoomx1=@$_GET['zoomx1'];
+if (!$zoomy1) $zoomy1=1;
+if (!$zoomx1) $zoomx1=1;
+$zerolevel1=@$_GET['zerolevel1'];
+if (!$zerolevel1) $zerolevel1=150;
+$sr1=@$_GET['sr1'];
+if (!$sr1) $sr1=5000;
+$tgs11=@$_GET['tgs11'];
+$tgs21=@$_GET['tgs21'];
+$tgs31=@$_GET['tgs31'];
+$tgs41=@$_GET['tgs41'];
+$tgs51=@$_GET['tgs51'];
+$tgs61=@$_GET['tgs61'];
+$tgs71=@$_GET['tgs71'];
+if (!$tgs11) $tgs11="false"; else $tgs11="true";
+if (!$tgs21) $tgs21="false"; else $tgs21="true";
+if (!$tgs31) $tgs31="false"; else $tgs31="true";
+if (!$tgs41) $tgs41="false"; else $tgs41="true";
+if (!$tgs51) $tgs51="false"; else $tgs51="true";
+if (!$tgs61) $tgs61="false"; else $tgs61="true";
+if (!$tgs71) $tgs71="false"; else $tgs71="true";
+$autoy1=@$_GET['autoy1'];
+if (!$autoy1) $autoy1="false"; else $autoy1="true";
+///////// left panel bottom
+$chi1b=@$_GET['chi1b'];
+$chq1b=@$_GET['chq1b'];
+$chp1b=@$_GET['chp1b'];
+if (!$chi1b) $chi1b="false"; else $chi1b="true";
+if (!$chq1b) $chq1b="false"; else $chq1b="true";
+if (!$chp1b) $chp1b="false"; else $chp1b="true";
+$chiris1b=@$_GET['chiris1b'];
+$chqris1b=@$_GET['chqris1b'];
+$chpris1b=@$_GET['chpris1b'];
+if (!$chiris1b) $chiris1b="false"; else $chiris1b="true";
+if (!$chqris1b) $chqris1b="false"; else $chqris1b="true";
+if (!$chpris1b) $chpris1b="false"; else $chpris1b="true";
+$colori1b=@$_GET['colori1b'];
+$colorq1b=@$_GET['colorq1b'];
+$colorp1b=@$_GET['colorp1b'];
+if (!$colori1b) $colori1b='#ff0000';
+if (!$colorq1b) $colorq1b='#00ff00';
+if (!$colorp1b) $colorp1b='#0000ff';
+$chi2b=@$_GET['chi2b'];
+$chq2b=@$_GET['chq2b'];
+$chp2b=@$_GET['chp2b'];
+if (!$chi2b) $chi2b="false"; else $chi2b="true";
+if (!$chq2b) $chq2b="false"; else $chq2b="true";
+if (!$chp2b) $chp2b="false"; else $chp2b="true";
+$chiris2b=@$_GET['chiris2b'];
+$chqris2b=@$_GET['chqris2b'];
+$chpris2b=@$_GET['chpris2b'];
+if (!$chiris2b) $chiris2b="false"; else $chiris2b="true";
+if (!$chqris2b) $chqris2b="false"; else $chqris2b="true";
+if (!$chpris2b) $chpris2b="false"; else $chpris2b="true";
+$colori2b=@$_GET['colori2b'];
+$colorq2b=@$_GET['colorq2b'];
+$colorp2b=@$_GET['colorp2b'];
+if (!$colori2b) $colori2b='#ff5555';
+if (!$colorq2b) $colorq2b='#55ff55';
+if (!$colorp2b) $colorp2b='#5555ff';
+$zoomy2=@$_GET['zoomy2'];
+$zoomx2=@$_GET['zoomx2'];
+if (!$zoomy2) $zoomy2=1;
+if (!$zoomx2) $zoomx2=1;
+$zerolevel2=@$_GET['zerolevel2'];
+if (!$zerolevel2) $zerolevel2=150;
+$sr1=@$_GET['sr2'];
+if (!$sr2) $sr2=5000;
+
+$tgs12=@$_GET['tgs12'];
+$tgs22=@$_GET['tgs22'];
+$tgs32=@$_GET['tgs32'];
+$tgs42=@$_GET['tgs42'];
+$tgs52=@$_GET['tgs52'];
+$tgs62=@$_GET['tgs62'];
+$tgs72=@$_GET['tgs72'];
+if (!$tgs12) $tgs12="false"; else $tgs12="true";
+if (!$tgs22) $tgs22="false"; else $tgs22="true";
+if (!$tgs32) $tgs32="false"; else $tgs32="true";
+if (!$tgs42) $tgs42="false"; else $tgs42="true";
+if (!$tgs52) $tgs52="false"; else $tgs52="true";
+if (!$tgs62) $tgs62="false"; else $tgs62="true";
+if (!$tgs72) $tgs72="false"; else $tgs72="true";
+
+$autoy2=@$_GET['autoy2'];
+if (!$autoy2) $autoy2="false"; else $autoy2="true";
+
 $itmp=0;
 $qtmp=0;
 $etmp=0;
@@ -73,11 +199,14 @@ echo "
     var q2=new Array(1000);
     var e1=new Array(1000);
     var e2=new Array(1000);
+//    document.getElementById('autoy1').checked = $autoy1; 
 //    var sf1=document.getElementById(\"startframe1\"); 
 //    var sf2=document.getElementById(\"startframe2\");
 //    sf1.value=$startframe1; 
 //    sf2.value=$startframe2; 
+    
 ";
+//;document.getElementById("autoy1")
 // read file 1
 $filesize1=0;
 $filesize2=0;
@@ -548,22 +677,21 @@ if ($filename2!='demosinus'){
 //      outp2(canid);
       outgrid(canid); //reout 4 top layer
     }
-    function reread(){
+    function reread(){document.getElementById("xform").submit();}
+/*
+    function reread2(){
       var fn1=document.getElementById('filename1');
       var br18=document.getElementById('br18');
       var br112=document.getElementById('br112');
       var br116=document.getElementById('br116');
       var sf1=document.getElementById('startframe1');
       var z1=document.getElementById('zoombox1');
-
       var fn2=document.getElementById('filename2');
       var br28=document.getElementById('br28');
       var br212=document.getElementById('br212');
       var br216=document.getElementById('br216');
       var sf2=document.getElementById('startframe2');
       var z2=document.getElementById('zoombox2');
-
-
       var urlstr='index.php?filename1='+fn1.value+"&bitrate1=";
       if (br18.checked) urlstr+='8&startframe1=';
       if (br112.checked) urlstr+='12&startframe1=';
@@ -571,7 +699,6 @@ if ($filename2!='demosinus'){
       urlstr+=sf1.value;
       urlstr+="&zoom1=";
       urlstr+=z1.value;
-
       urlstr+='&filename2=';
       urlstr+=fn2.value;
       urlstr+="&bitrate2="
@@ -581,25 +708,98 @@ if ($filename2!='demosinus'){
       urlstr+=sf2.value;
       urlstr+="&zoom2=";
       urlstr+=z2.value;
-
       window.location.replace(urlstr);
 //  console.log(urlstr);      
-
-    
     }
+
+    */
     window.onload = function() { 
+      document.getElementById('autoy1').checked = <?php echo $autoy1;?>; 
+      document.getElementById('autoy2').checked = <?php echo $autoy2;?>; 
+
+      document.getElementById('chi1').checked = <?php echo $chi1;?>; 
+      document.getElementById('chq1').checked = <?php echo $chq1;?>; 
+      document.getElementById('chp1').checked = <?php echo $chp1;?>; 
+      document.getElementById('chi2').checked = <?php echo $chi2;?>; 
+      document.getElementById('chq2').checked = <?php echo $chq2;?>; 
+      document.getElementById('chp2').checked = <?php echo $chp2;?>; 
+
+      document.getElementById('chi1b').checked = <?php echo $chi1b;?>; 
+      document.getElementById('chq1b').checked = <?php echo $chq1b;?>; 
+      document.getElementById('chp1b').checked = <?php echo $chp1b;?>; 
+      document.getElementById('chi2b').checked = <?php echo $chi2b;?>; 
+      document.getElementById('chq2b').checked = <?php echo $chq2b;?>; 
+      document.getElementById('chp2b').checked = <?php echo $chp2b;?>; 
+
+      document.getElementById('chiris1').checked = <?php echo $chiris1;?>; 
+      document.getElementById('chqris1').checked = <?php echo $chqris1;?>; 
+      document.getElementById('chpris1').checked = <?php echo $chpris1;?>; 
+      document.getElementById('chiris2').checked = <?php echo $chiris2;?>; 
+      document.getElementById('chqris2').checked = <?php echo $chqris2;?>; 
+      document.getElementById('chpris2').checked = <?php echo $chpris2;?>; 
+
+      document.getElementById('chiris1b').checked = <?php echo $chiris1b;?>; 
+      document.getElementById('chqris1b').checked = <?php echo $chqris1b;?>; 
+      document.getElementById('chpris1b').checked = <?php echo $chpris1b;?>; 
+      document.getElementById('chiris2b').checked = <?php echo $chiris2b;?>; 
+      document.getElementById('chqris2b').checked = <?php echo $chqris2b;?>; 
+      document.getElementById('chpris2b').checked = <?php echo $chpris2b;?>; 
+
+      document.getElementById('colori1').value = '<?php echo $colori1;?>'; 
+      document.getElementById('colorq1').value = '<?php echo $colorq1;?>'; 
+      document.getElementById('colorp1').value = '<?php echo $colorp1;?>'; 
+      document.getElementById('colori2').value = '<?php echo $colori2;?>'; 
+      document.getElementById('colorq2').value = '<?php echo $colorq2;?>'; 
+      document.getElementById('colorp2').value = '<?php echo $colorp2;?>'; 
+
+      document.getElementById('colori1b').value = '<?php echo $colori1b;?>'; 
+      document.getElementById('colorq1b').value = '<?php echo $colorq1b;?>'; 
+      document.getElementById('colorp1b').value = '<?php echo $colorp1b;?>'; 
+      document.getElementById('colori2b').value = '<?php echo $colori2b;?>'; 
+      document.getElementById('colorq2b').value = '<?php echo $colorq2b;?>'; 
+      document.getElementById('colorp2b').value = '<?php echo $colorp2b;?>'; 
+      
+      document.getElementById('zoomxbox1').value = <?php echo $zoomx1;?>; 
+      document.getElementById('zoomybox1').value = <?php echo $zoomy1;?>; 
+      document.getElementById('zerolevel1').value = <?php echo $zerolevel1;?>; 
+                                
+      document.getElementById('zoomxbox2').value = <?php echo $zoomx2;?>; 
+      document.getElementById('zoomybox2').value = <?php echo $zoomy2;?>; 
+      document.getElementById('zerolevel2').value = <?php echo $zerolevel2;?>; 
+
+      document.getElementById('tgs11').checked = <?php echo $tgs11;?>; 
+      document.getElementById('tgs21').checked = <?php echo $tgs21;?>; 
+      document.getElementById('tgs31').checked = <?php echo $tgs31;?>; 
+      document.getElementById('tgs41').checked = <?php echo $tgs41;?>; 
+      document.getElementById('tgs51').checked = <?php echo $tgs51;?>; 
+      document.getElementById('tgs61').checked = <?php echo $tgs61;?>; 
+      document.getElementById('tgs71').checked = <?php echo $tgs71;?>; 
+
+      document.getElementById('tgs12').checked = <?php echo $tgs12;?>; 
+      document.getElementById('tgs22').checked = <?php echo $tgs22;?>; 
+      document.getElementById('tgs32').checked = <?php echo $tgs32;?>; 
+      document.getElementById('tgs42').checked = <?php echo $tgs42;?>; 
+      document.getElementById('tgs52').checked = <?php echo $tgs52;?>; 
+      document.getElementById('tgs62').checked = <?php echo $tgs62;?>; 
+      document.getElementById('tgs72').checked = <?php echo $tgs72;?>; 
+      
+      document.getElementById('sr1').value = <?php echo $sr1;?>;     
+      document.getElementById('sr2').value = <?php echo $sr2;?>;     
+      
+      
       synhro('zoombox1','zoomslider1');
       synhro('zoombox2','zoomslider2');      
       paintscale("cano1","#000000"); //killit!
       paintscale("cano2","#000000");  // killit!
       reoutcanvas("cano1");
       reoutcanvas("cano2");  
+
     }
   </script>
  </head>
 <body>
+<form method="get" action="./index.php" onchange='' id="xform">
 <div class="hid"> <!-- TOP panel-->
- <form method="get" action="./index.php" onchange='' id="xform">
  <table border=0 width=100%>
   <tr>
    <td >&nbsp; &nbsp;File A :
@@ -652,42 +852,41 @@ if ($filename2!='demosinus'){
    <td><input type="submit" value="update"></td> 
   </tr>
  </table>
- </form>
 </div>
 <div class="lhid"><!-- Left panel1-->
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chi1" checked>
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chi1" name="chi1" checked>
  -I1&nbsp;&nbsp;
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chiris1">
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chiris1" name="chiris1">
  mark point&nbsp;&nbsp;color:
  <input type=text name=colori1 id='colori1' value="#ff0000" style='width:70px;height:10px;' onchange='reoutcanvas("cano1")'><br>
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chq1"  checked>
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chq1" name="chq1"  checked>
  -Q1&nbsp;&nbsp;
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chqris1">
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chqris1" name="chqris1">
  mark point&nbsp;&nbsp;color:
  <input type=text name=colorq1 id='colorq1' value="#00ff00" style='width:70px;height:10px;' onchange='reoutcanvas("cano1")'><br>
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chp1">
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chp1" name="chp1">
  -PWR1
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chpris1">
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chpris1" name="chpris1" >
  mark point&nbsp;&nbsp;color:
  <input type=text name=colorp1 id='colorp1' value="#0000ff" style='width:70px;height:10px;' onchange='reoutcanvas("cano1")'>
  <hr>
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chi2">
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chi2" name="chi2">
  -I2&nbsp;&nbsp;
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chiris2">
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chiris2" name="chiris2">
  mark point&nbsp;&nbsp;color:
  <input type=text name=colori2 id='colori2' value="#9f0000" style='width:70px;height:10px;' onchange='reoutcanvas("cano1")'><br>
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chq2">
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chq2" name="chq2">
  -Q2&nbsp;&nbsp;
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chqris2">
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chqris2" id="chqris2">
  mark point&nbsp;&nbsp;color:
  <input type=text name=colorq2 id='colorq2' value="#009f00" style='width:70px;height:10px;' onchange='reoutcanvas("cano1")'><br>
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chp2">-PWR2
- <input type=checkbox onchange='reoutcanvas("cano1")' id="chpris2">mark point&nbsp;&nbsp;
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chp2" name="chp2">-PWR2
+ <input type=checkbox onchange='reoutcanvas("cano1")' id="chpris2" name="chpris2" >mark point&nbsp;&nbsp;
  color:<input type=text name=colorp2 id='colorp2' value="#00009f  " style='width:70px;height:10px;' onchange='reoutcanvas("cano1")'>
  <hr>
  <input type=text name=zoomy1 id='zoomybox1' value="1" style='width:40px;height:10px;' onchange="synhro('zoomybox1','zoomyslider1');reoutcanvas('cano1');">
  <input id='zoomyslider1' type="range" min="0.005" max="20" step="0.005" value="1" onchange="synhro('zoomyslider1','zoomybox1');reoutcanvas('cano1');" name="zoomyslider1" style='topmargin:15;'>
- Zoom Y <input type=checkbox onchange='reoutcanvas("cano1");' id="autoy1" checked><br>
+ Zoom Y <input type=checkbox onchange='reoutcanvas("cano1");' id="autoy1" name="autoy1" checked><br>
  <input type=text name=zoomx1 id='zoomxbox1' value="1" style='width:40px;height:10px;' onchange="synhro('zoomxbox1','zoomxslider1');reoutcanvas('cano1');">
  <input id='zoomxslider1' type="range" min="0.01" max="1" step="0.01" value="1" onchange="synhro('zoomxslider1','zoomxbox1');reoutcanvas('cano1');" name="zoomxslider1" style='topmargin:15;'>
  Zoom X <br>
@@ -696,53 +895,53 @@ if ($filename2!='demosinus'){
  Zero<br>
  SamleRate:<input type=text name=sr1 id='sr1' value="5000" style='width:50px;height:10px;' onchange='reoutcanvas("cano1");'>KHz<br>
  <font size="-2">
-  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs11"><label for="tgs11">sec</label>
-  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs21"><label for="tgs21">1/10</label>
-  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs31"><label for="tgs31">1/100</label>
-  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs41"><label for="tgs41">1m</label>
-  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs51"><label for="tgs51">1/10m</label>
-  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs61"><label for="tgs51">1/100m</label>
-  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs71"><label for="tgs71">1micro</label>
+  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs11" name="tgs11"><label for="tgs11">sec</label>
+  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs21" name="tgs21"><label for="tgs21">1/10</label>
+  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs31" name="tgs31"><label for="tgs31">1/100</label>
+  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs41" name="tgs41"><label for="tgs41">1m</label>
+  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs51" name="tgs51"><label for="tgs51">1/10m</label>
+  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs61" name="tgs61"><label for="tgs51">1/100m</label>
+  <input type=checkbox onchange='reoutcanvas("cano1")' id="tgs71" name="tgs71"><label for="tgs71">1micro</label>
  </font>
 </div>
 <!-------------------------------------------------------------------------->
 <div class="l2hid"> <!-- Left panel2-->
- <input type=checkbox onchange='reoutcanvas("cano2");' id="chi1b">
+ <input type=checkbox onchange='reoutcanvas("cano2");' id="chi1b" name="chi1b">
  -I1&nbsp;&nbsp;
- <input type=checkbox onchange='reoutcanvas("cano2");' id="chiris1b">
+ <input type=checkbox onchange='reoutcanvas("cano2");' id="chiris1b" name="chiris1b">
  mark point&nbsp;&nbsp;color:
  <input type=text name=colori1b id='colori1b' value="#ff0000" style='width:70px;height:10px;' onchange='reoutcanvas("cano2");'><br>
- <input type=checkbox onchange='reoutcanvas("cano2");' id="chq1b">
+ <input type=checkbox onchange='reoutcanvas("cano2");' id="chq1b" name="chq1b">
  -Q1&nbsp;&nbsp;
- <input type=checkbox onchange='reoutcanvas("cano2")' id="chqris1b">
+ <input type=checkbox onchange='reoutcanvas("cano2")' id="chqris1b" name="chqris1b">
  mark point&nbsp;&nbsp;color:
  <input type=text name=colorq1b id='colorq1b' value="#00ff00" style='width:70px;height:10px;' onchange='reoutcanvas("cano2")'><br>
- <input type=checkbox onchange='reoutcanvas("cano2");' id="chp1b">
+ <input type=checkbox onchange='reoutcanvas("cano2");' id="chp1b" name="chp1b">
  -PWR1
- <input type=checkbox onchange='reoutcanvas("cano2");' id="chpris1b">
+ <input type=checkbox onchange='reoutcanvas("cano2");' id="chpris1b" name="chpris1b">
  mark point&nbsp;&nbsp;color:
  <input type=text name=colorp1b id='colorp1b' value="#0000ff" style='width:70px;height:10px;' onchange='reoutcanvas("cano2")'>
  <hr>
- <input type=checkbox onchange='reoutcanvas("cano2");' id="chi2b"  checked>
+ <input type=checkbox onchange='reoutcanvas("cano2");' id="chi2b" name="chi2b"  checked>
  -I2&nbsp;&nbsp;
- <input type=checkbox onchange='reoutcanvas("cano2")' id="chiris2b">
+ <input type=checkbox onchange='reoutcanvas("cano2")' id="chiris2b" name="chiris2b">
  mark point&nbsp;&nbsp;color:
  <input type=text name=colori2b id='colori2b' value="#9f0000" style='width:70px;height:10px;' onchange='reoutcanvas("cano2")'><br>
- <input type=checkbox onchange='reoutcanvas("cano2");' id="chq2b"   checked>
+ <input type=checkbox onchange='reoutcanvas("cano2");' id="chq2b"  name="chq2b"   checked>
  -Q2&nbsp;&nbsp;
- <input type=checkbox onchange='reoutcanvas("cano2")' id="chqris2b">
+ <input type=checkbox onchange='reoutcanvas("cano2")' id="chqris2b" name="chqris2b">
  mark point&nbsp;&nbsp;color:
  <input type=text name=colorq2b id='colorq2b' value="#009f00" style='width:70px;height:10px;' onchange='reoutcanvas("cano2");'><br>
- <input type=checkbox onchange='reoutcanvas("cano2");' id="chp2b">
+ <input type=checkbox onchange='reoutcanvas("cano2");' id="chp2b" name="chp2b">
  -PWR2
- <input type=checkbox onchange='reoutcanvas("cano2");' id="chpris2b">
+ <input type=checkbox onchange='reoutcanvas("cano2");' id="chpris2b" name="chpris2b">
  mark point&nbsp;&nbsp;color:
  <input type=text name=colorp2b id='colorp2b' value="#00009f  " style='width:70px;height:10px;' onchange='reoutcanvas("cano2");'>
  <hr>
  <input type=text name=zoomy2 id='zoomybox2' value="1" style='width:40px;height:10px;' onchange="synhro('zoomybox2','zoomyslider2');reoutcanvas('cano2');">
  <input id='zoomyslider2' type="range" min=".005" max="20" step=".005" value="1" onchange="synhro('zoomyslider2','zoomybox2');reoutcanvas('cano2');" name="zoomyslider2" style='topmargin:15;'>
  Zoom Y 
- <input type=checkbox onchange='reoutcanvas("cano2");' id="autoy2" checked><br>
+ <input type=checkbox onchange='reoutcanvas("cano2");' id="autoy2" name="autoy2" checked><br>
  <input type=text name=zoomx2 id='zoomxbox2' value="1" style='width:40px;height:10px;' onchange="synhro('zoomxbox2','zoomxslider2');reoutcanvas('cano2');">
  <input id='zoomxslider2' type="range" min="0.01" max="1" step="0.01" value="1" onchange="synhro('zoomxslider2','zoomxbox2');reoutcanvas('cano2');" name="zoomxslider2" style='topmargin:15;'>
  Zoom X <br>
@@ -751,22 +950,22 @@ if ($filename2!='demosinus'){
  Zero<br>
  SamleRate:<input type=text name=sr2 id='sr2' value="5000" style='width:50px;height:10px;' onchange='reoutcanvas("cano2")'>KHz<br>
  <font size="-2">
-  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs12"><label for="tgs12">sec</label>
-  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs22"><label for="tgs22">1/10</label>
-  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs32"><label for="tgs32">1/100</label>
-  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs42"><label for="tgs42">1m</label>
-  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs52"><label for="tgs52">1/10m</label>
-  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs62"><label for="tgs52">1/100m</label>
-  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs72"><label for="tgs72">1micro</label>
+  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs12" name="tgs12"><label for="tgs12">sec</label>
+  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs22" name="tgs22"><label for="tgs22">1/10</label>
+  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs32" name="tgs32"><label for="tgs32">1/100</label>
+  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs42" name="tgs42"><label for="tgs42">1m</label>
+  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs52" name="tgs52"><label for="tgs52">1/10m</label>
+  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs62" name="tgs62"><label for="tgs52">1/100m</label>
+  <input type=checkbox onchange='reoutcanvas("cano2")' id="tgs72" name="tgs72"><label for="tgs72">1micro</label>
  </font>
 </div>
+ </form>
 <canvas id="cano1" width="1000" height="300" class="zzpoint"></canvas> 
 <canvas id="cano2" width="1000" height="300" class="zzpoint2"></canvas> 
 <div class='expl'>
-0<input type='range' id='nav1' value=<?php echo $startframe1;?> min="0" max=<?php if ($framesize1>1000) echo($framesize1-1000); else echo "0";?> step='100' name='nav1' onchange="synhro('nav1','nav1box');synhro('nav1','startframe1');reread();" autofocus>
-<?php echo($framesize1);?> &nbsp;&nbsp;
-<input type=text name=nav1box id='nav1box' value="<?php echo $startframe1;?>" style='width:40px;height:10px;' onchange="synhro('nav1box','nav1');reread();">
-
+ 0<input type='range' id='nav1' value=<?php echo $startframe1;?> min="0" max=<?php if ($framesize1>1000) echo($framesize1-1000); else echo "0";?> step='100' name='nav1' onchange="synhro('nav1','nav1box');synhro('nav1','startframe1');synhro('nav1','startframe2');reread();" autofocus>
+ <?php echo($framesize1);?> &nbsp;&nbsp;
+ <input type=text name=nav1box id='nav1box' value="<?php echo $startframe1;?>" style='width:40px;height:10px;' onchange="synhro('nav1box','nav1'); synhro('nav1','startframe1'); synhro('nav1','startframe2');reread();">
 </div>
 </body>
 </html>
