@@ -11,17 +11,20 @@
     .hid {position: fixed; left: 0px; top: -73px; width: 100%; height: 80px; 
     background: #777777; color: #111111; margin-top: 5px; 
     transition: top .2s linear; z-index: 10;font-family:arial;}
-    .hid:hover {top: 0px; z-index: 8;}
+    .hid:hover {top: 0px; z-index: 8; opacity: .8;}
     .zzpoint2 {position: fixed ; left: 12px; top: 312px; z-index: 3;}
     .lhid {position: fixed; left: -350px; top: 8px; width: 360px; height: 298px; 
     background: #777777; color: #111111; margin-top: 5px; 
     transition: left .2s linear; z-index: 10;font-family:monospace;}
-    .lhid:hover {left: 0px; z-index: 2;}
+    .lhid:hover {left: 0px; z-index: 2; opacity: .9;}
     .l2hid {position: fixed; left: -350px; top: 308px; width: 360px; height: 298px; 
     background: #777777; color: #111111; margin-top: 5px; 
     transition: left .2s linear; z-index: 10;font-family:monospace;}
-    .l2hid:hover {left: 0px; z-index: 10;}
+    .l2hid:hover {left: 0px; z-index: 10; opacity: .9;}
     .expl {position: fixed; left: 0px; top: 616px; width: 360px; height: 50px; 
+    background: #777777; color: #111111; margin-top: 5px; 
+    transition: left .2s linear; z-index: 10;font-family:monospace;}
+    .zoomexpl {position: fixed; left: 0px; top: 670px; width: 360px; height: 50px; 
     background: #777777; color: #111111; margin-top: 5px; 
     transition: left .2s linear; z-index: 10;font-family:monospace;}
   </style>
@@ -43,6 +46,7 @@ if (!$startframe1) $startframe1=0;
 if (!$startframe2) $startframe2=0;
 $zoom1=@$_GET['zoom1'];
 $zoom2=@$_GET['zoom2'];
+$zooma=$zoom1;
 if (!$zoom1) $zoom1=1;
 if (!$zoom2) $zoom2=1;
 $byteorder1=@$_GET['bl1'];
@@ -157,7 +161,7 @@ if (!$zoomy2) $zoomy2=1;
 if (!$zoomx2) $zoomx2=1;
 $zerolevel2=@$_GET['zerolevel2'];
 if (!$zerolevel2) $zerolevel2=150;
-$sr1=@$_GET['sr2'];
+$sr2=@$_GET['sr2'];
 if (!$sr2) $sr2=5000;
 
 $tgs12=@$_GET['tgs12'];
@@ -181,6 +185,7 @@ if (!$autoy2) $autoy2="false"; else $autoy2="true";
 $itmp=0;
 $qtmp=0;
 $etmp=0;
+
 //variables 2 JS
 echo "
     var filename1='$filename1';
@@ -220,7 +225,8 @@ if ($filename1!='demosinus'){
   if ($filesize1>=$shift) fseek($f,$shift);
   $i=0;
   while (($i++ < 1000 ) && !(feof($f))){ //read 1000 frames file A
-    $y=ord(fgetc($f)); // I
+    $y=ord(fgetc($f)); // y=I
+
     if ($bitrate1==8){ 
       if ($y>127) $y=$y-256;
     } 
@@ -229,17 +235,19 @@ if ($filename1!='demosinus'){
       else $y * 256 + ord(fgetc($f));
       if ($y>32767) $y=$y-65536; // 2unsigned    
     }
+    $y1=ord(fgetc($f)); // y1=Q
+    if ($bitrate1==8){ 
+      if ($y1>127) $y1=$y1-256;
+    } 
+    if ($bitrate1==16){
+      if ($byteorder1=='off') $y1=$y1 + 256 * ord(fgetc($f));
+      else $y1 * 256 + ord(fgetc($f));
+      if ($y1>32767) $y1=$y1-65536; // 2unsigned    
+    }
+
+    $amp=round(sqrt($y*$y+$y1*$y1));
     echo "i1[$i]=".$y.";"; 
-    $y=ord(fgetc($f)); // Q
-    if ($bitrate1==8){ 
-      if ($y>127) $y=$y-256;
-    } 
-    if ($bitrate1==16){
-      if ($byteorder1=='off') $y=$y + 256 * ord(fgetc($f));
-      else $y * 256 + ord(fgetc($f));
-      if ($y>32767) $y=$y-65536; // 2unsigned    
-    }
-    echo "q1[$i]=".$y.";"; 
+    echo "q1[$i]=".$y1.";e1[$i]=$amp;"; 
   }
   fclose($f);
 }
@@ -254,27 +262,50 @@ if ($filename2!='demosinus'){
   if ($bitrate2==16) $shift=$startframe2*4;
   if ($filesize2>=$shift) fseek($f2,$shift);
   $i=0;
+  echo "<!-- zoom1=$zoom1 zooma=$zooma -->\n";
+  if (!@$zooma)  $zooma=1;
   while (($i++ < 1000 ) AND !feof($f2)){ //read 1000 frames file B
-    $y=ord(fgetc($f2)); // I
-    if ($bitrate2==8){ 
-      if ($y>127) $y=$y-256;
-    } 
-    if ($bitrate2==16){
-      if ($byteorder2=='off') $y=$y + 256 * ord(fgetc($f2));
-      else $y * 256 + ord(fgetc($f2));
-      if ($y>32767) $y=$y-65536; // 2unsigned    
-    }
+    $z=0;
+    $si=0; // summ of i for block zoom1-size
+    $sq=0; // summ of Q for block zoom1-size
+    $mi=0; // max i
+    $mq=0; // max Q   
+
+    do {
+      $z++;
+      echo "<!-- iteration $z zoom=$zooma -->\n";
+      $y=ord(fgetc($f2)); // I
+      if ($bitrate2==8) {if ($y>127) $y=$y-256;} 
+      if ($bitrate2==16){
+        if ($byteorder2=='off') $y=$y + 256 * ord(fgetc($f2));
+        else $y * 256 + ord(fgetc($f2)); //B-end/L-end
+        if ($y>32767) $y=$y-65536; // 2signed    
+      }
+      $si+=$y*$y;
+      if ($y>$mi) $mi=$y;  //find max
+
+
+
+      $y1=ord(fgetc($f2)); // Q
+      if ($bitrate2==8){if ($y1>127) $y1=$y1-256;} 
+      if ($bitrate2==16){
+        if ($byteorder2=='off') $y1=$y1 + 256 * ord(fgetc($f2));
+        else $y1 * 256 + ord(fgetc($f2));
+        if ($y1>32767) $y1=$y1-65536; // 2signed    
+      }
+      $sq+=$y1*y1;
+      if ($y1>$mq) $mq=$y1;  
+      
+      
+    } while ($z<$zooma);  
+
+    $y=round($si/$zooma);
+    $y1=round($sq/$zooma);
+//    $y=$mi;
+//    $y1=$mq;
+    $amp=round(sqrt($y+$y1));
     echo "i2[$i]=".$y.";"; 
-    $y=ord(fgetc($f2)); // Q
-    if ($bitrate2==8){ 
-      if ($y>127) $y=$y-256;
-    } 
-    if ($bitrate2==16){
-      if ($byteorder2=='off') $y=$y + 256 * ord(fgetc($f2));
-      else $y * 256 + ord(fgetc($f2));
-      if ($y>32767) $y=$y-65536; // 2unsigned    
-    }
-    echo "q2[$i]=".$y.";"; 
+    echo "q2[$i]=".$y1."; e2[$i]=$amp;\n"; 
   }
   fclose($f2);
 }
@@ -658,6 +689,7 @@ if ($filename2!='demosinus'){
       context.stroke();                   
     }        
     function synhro(inid,outid){
+ //   console.log(inid);
       var x = document.getElementById(inid);
       var y = document.getElementById(outid);
       y.value = x.value;
@@ -673,47 +705,17 @@ if ($filename2!='demosinus'){
       outi2(canid);
       outq1(canid);
       outq2(canid);
+      outp1(canid);
+      outp2(canid);
+      
 //      outp1(canid);
 //      outp2(canid);
       outgrid(canid); //reout 4 top layer
     }
     function reread(){document.getElementById("xform").submit();}
-/*
-    function reread2(){
-      var fn1=document.getElementById('filename1');
-      var br18=document.getElementById('br18');
-      var br112=document.getElementById('br112');
-      var br116=document.getElementById('br116');
-      var sf1=document.getElementById('startframe1');
-      var z1=document.getElementById('zoombox1');
-      var fn2=document.getElementById('filename2');
-      var br28=document.getElementById('br28');
-      var br212=document.getElementById('br212');
-      var br216=document.getElementById('br216');
-      var sf2=document.getElementById('startframe2');
-      var z2=document.getElementById('zoombox2');
-      var urlstr='index.php?filename1='+fn1.value+"&bitrate1=";
-      if (br18.checked) urlstr+='8&startframe1=';
-      if (br112.checked) urlstr+='12&startframe1=';
-      if (br116.checked) urlstr+='16&startframe1=';
-      urlstr+=sf1.value;
-      urlstr+="&zoom1=";
-      urlstr+=z1.value;
-      urlstr+='&filename2=';
-      urlstr+=fn2.value;
-      urlstr+="&bitrate2="
-      if (br28.checked) urlstr+='8&startframe2=';
-      if (br212.checked) urlstr+='12&startframe2=';
-      if (br216.checked) urlstr+='16&startframe2=';
-      urlstr+=sf2.value;
-      urlstr+="&zoom2=";
-      urlstr+=z2.value;
-      window.location.replace(urlstr);
-//  console.log(urlstr);      
-    }
 
-    */
     window.onload = function() { 
+    //left panels
       document.getElementById('autoy1').checked = <?php echo $autoy1;?>; 
       document.getElementById('autoy2').checked = <?php echo $autoy2;?>; 
 
@@ -785,10 +787,9 @@ if ($filename2!='demosinus'){
       
       document.getElementById('sr1').value = <?php echo $sr1;?>;     
       document.getElementById('sr2').value = <?php echo $sr2;?>;     
-      
-      
-      synhro('zoombox1','zoomslider1');
-      synhro('zoombox2','zoomslider2');      
+            
+//      synhro('zoombox1','zoomslider1');
+//      synhro('zoombox2','zoomslider2');      
       paintscale("cano1","#000000"); //killit!
       paintscale("cano2","#000000");  // killit!
       reoutcanvas("cano1");
@@ -800,7 +801,8 @@ if ($filename2!='demosinus'){
 <body>
 <form method="get" action="./index.php" onchange='' id="xform">
 <div class="hid"> <!-- TOP panel-->
- <table border=0 width=100%>
+
+ <table border=0>
   <tr>
    <td >&nbsp; &nbsp;File A :
  <select name=filename1 id='filename1'>
@@ -812,19 +814,18 @@ if ($filename2!='demosinus'){
    }
  ?>
 </select>
-   </td>
-   <td>
-    <input id='br18' type=radio name=bitrate1 value=8 <?php if ($bitrate1==8) echo "checked";?>>8
-    <input id='br112' type=radio name=bitrate1 value=12 <?php if ($bitrate1==12) echo "checked";?>>12
-    <input id='br116' type=radio name=bitrate1 value=16 <?php if ($bitrate1==16) echo "checked";?>>16
-   </td>
-   <td>Big/Litle<input type=checkbox name=bl1 id='bl1'></td>
-   <td>Start frame: <input type=text name='startframe1' id='startframe1' size=5 value="0"></td>
+    | <input id='br18' type=radio name=bitrate1 value=8 <?php if ($bitrate1==8) echo "checked";  ?>>8
+    <input id='br112' type=radio name=bitrate1 value=12 <?php if ($bitrate1==12) echo "checked"; ?>>12
+    <input id='br116' type=radio name=bitrate1 value=16 <?php if ($bitrate1==16) echo "checked"; ?>>16 | Big/Litle<input type=checkbox name=bl1 id='bl1'>
+    | Start frame: <input type=text name='startframe1' id='startframe1' size=5 value="0">
+    </td>
+<!--
    <td>Zoom A
     <input id='zoomslider1' type="range" min="1" max="1000" step="1" value="1" onchange='synhro("zoomslider1","zoombox1");' name="zoomslider1" style='topmargin:15;'>
     <input type=text name=zoom1 id='zoombox1' value="1" style='width:50px;' onchange="synhro('zoombox1','zoomslider1');">  
    </td> 
    <td><input type="submit" value="update"></td> 
+-->
   </tr> <!--  second:-->
   <tr>
    <td>&nbsp; &nbsp;File B :
@@ -837,21 +838,22 @@ if ($filename2!='demosinus'){
    }
 ?>
 </select>
-   </td>
-   <td>
-    <input id='br28' type=radio name=bitrate2 value=8 <?php if ($bitrate2==8) echo "checked";?>>8
+    | <input id='br28' type=radio name=bitrate2 value=8 <?php if ($bitrate2==8) echo "checked";?>>8
     <input id='br212' type=radio name=bitrate2 value=12 <?php if ($bitrate2==12) echo "checked";?>>12
-    <input id='br216' type=radio name=bitrate2 value=16 <?php if ($bitrate2==16) echo "checked";?>>16
-   </td>
-   <td>Big/Litle<input type=checkbox name=bl2 id='bl2'></td>
-   <td>Start frame: <input type=text name='startframe2' size=5 value="0" id='startframe2'></td>
+    <input id='br216' type=radio name=bitrate2 value=16 <?php if ($bitrate2==16) echo "checked";?>>16 | Big/Litle<input type=checkbox name=bl2 id='bl2'>
+    | Start frame: <input type=text name='startframe2' size=5 value="0" id='startframe2'>
+    </td>
+    <td><input type="submit" value="Load files"></td>
+<!--
    <td>Zoom B
     <input id='zoomslider2' type="range" min="1" max="1000" step="1" value="1" onchange="synhro('zoomslider2','zoombox2');" name="zoomslider2" style='topmargin:15;'>
     <input type=text name=zoom2 id='zoombox2' value="1" style='width:50px;' onchange="synhro('zoombox2','zoomslider2');">  
    </td> 
    <td><input type="submit" value="update"></td> 
+-->
   </tr>
  </table>
+ 
 </div>
 <div class="lhid"><!-- Left panel1-->
  <input type=checkbox onchange='reoutcanvas("cano1")' id="chi1" name="chi1" checked>
@@ -963,10 +965,16 @@ if ($filename2!='demosinus'){
 <canvas id="cano1" width="1000" height="300" class="zzpoint"></canvas> 
 <canvas id="cano2" width="1000" height="300" class="zzpoint2"></canvas> 
 <div class='expl'>
- 0<input type='range' id='nav1' value=<?php echo $startframe1;?> min="0" max=<?php if ($framesize1>1000) echo($framesize1-1000); else echo "0";?> step='100' name='nav1' onchange="synhro('nav1','nav1box');synhro('nav1','startframe1');synhro('nav1','startframe2');reread();" autofocus>
+ 0<input type='range' id='nav1' value=<?php echo $startframe1;?> min="0" max=<?php if ($framesize1>1000) echo($framesize1-1000); else echo "0";?> step='100' name='nav1' onchange="synhro('nav1','nav1box');synhro('nav1','startframe1');synhro('nav1','startframe2');reread();" >
  <?php echo($framesize1);?> &nbsp;&nbsp;
  <input type=text name=nav1box id='nav1box' value="<?php echo $startframe1;?>" style='width:40px;height:10px;' onchange="synhro('nav1box','nav1'); synhro('nav1','startframe1'); synhro('nav1','startframe2');reread();">
 </div>
+<div class='zoomexpl'>
+ 0<input type='range' id='zoom1' form='xform' value=<?php echo $zoom1;?> min="0" max=1000 step='1' name='zoom1' onchange="synhro('zoom1','zoom1box'); reread();" autofocus>
+ <input type=text id='zoom1box' value="<?php echo $zoom1;?>" style='width:40px;height:10px;' onchange="synhro('zoom1box','zoom1');reread();">
+</div>
 </body>
 </html>
+
+<!---->
 
